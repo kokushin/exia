@@ -32,7 +32,9 @@ app.on("ready", async () => {
       });
 
   mainWindow.loadURL(url);
-  mainWindow.webContents.openDevTools();
+  if (process.env.NODE_ENV === "development") {
+    mainWindow.webContents.openDevTools();
+  }
 });
 
 // Quit the app once all windows are closed

@@ -1,7 +1,13 @@
 {
+  "productName": "Exia - Novel game engine",
+  "name": "exia",
+  "author": {
+    "name": "@kokushing",
+    "url": "https://x.com/kokushing"
+  },
+  "version": "0.0.1",
   "private": true,
   "main": "main/index.js",
-  "productName": "ElectronTypescriptNext",
   "scripts": {
     "clean": "rimraf dist main renderer/out renderer/.next",
     "dev": "npm run build-electron && electron .",
