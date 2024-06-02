@@ -1,5 +1,5 @@
 export const CONFIG = {
-  TITLE: "Exia",
+  TITLE: "Exia - Novel game engine",
 };
 
 export const SCREEN = {
