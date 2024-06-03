@@ -26,7 +26,7 @@ Exia(エクシア)は、Next.js(TypeScript)+Electron ベースのビジュアル
 
 Google Chrome での閲覧を推奨します。
 
-[URL here]
+[exia-demo.vercel.app](https://exia-demo.vercel.app)
 
 ## 🛠 主な機能
 
