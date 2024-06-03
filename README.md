@@ -69,19 +69,31 @@ Google Chrome での閲覧を推奨します。
 
 ### 手順
 
-1. 必要なモジュールをインストールします。
+1. プロジェクトをクローン、または[ダウンロード](https://github.com/kokushin/exia/archive/refs/heads/main.zip)
+
+```bash
+git clone https://github.com/kokushin/exia.git
+```
+
+2. プロジェクトのディレクトリへ移動
+
+```bash
+cd exia
+```
+
+3. 必要なモジュールをインストール
 
 ```bash
 npm install
 ```
 
-2. 開発用のサーバを起動してください。
+4. 開発用のサーバを起動
 
 ```bash
 npm run dev
 ```
 
-3. Electron アプリケーションが起動します。<br>
+5. Electron アプリケーションが起動します。<br>
    終了したい場合は、アプリケーションを閉じるか、Ctrl+C でローカルサーバを閉じてください。
 
 ### 画像やシナリオを変更したい場合
