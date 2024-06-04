@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/kokushin/exia/assets/4176300/d77508c6-76b3-4d83-9b77-675b27b1dfa4" width="240" alt="©Proxima Beta Pte. Limited ©SHIFT UP CORP.">
+  <img src="https://github.com/kokushin/exia/assets/4176300/f339f967-712e-4967-9de9-52962d8d74f6" width="240" alt="©Proxima Beta Pte. Limited ©SHIFT UP CORP.">
   <h1>Exia</h1>
   <b>Next.js and Electron based novel game engine.<br>
 Inspired by the UX/UI of “勝利の女神:NIKKE”.</b>
