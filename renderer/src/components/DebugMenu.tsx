@@ -9,7 +9,10 @@ export const DebugMenu: React.FC = () => {
 
   return (
     <ul className="fixed top-1 left-1 z-20 flex flex-col gap-2 bg-black bg-opacity-80 text-white text-xs p-2">
-      <li>currentLineIndex: {scenario.currentLineIndex}</li>
+      <li>scenarioId: {scenario.id}</li>
+      <li>
+        currentLineIndex: {scenario.currentLineIndex} / {scenario.lines.length - 1}
+      </li>
       <li>
         <button
           onClick={() => {
