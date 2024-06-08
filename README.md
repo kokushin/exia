@@ -38,7 +38,7 @@ Google Chrome での閲覧を推奨します。
   - [x] システムメッセージ表示
   - [x] キャラクター画像の表示
   - [x] キャラクター切り替え
-  - [ ] カットイン画像表示
+  - [x] カットイン画像表示
   - [ ] CG 表示
   - [ ] 選択肢表示/条件分岐(セリフ間ジャンプ)
   - [ ] シナリオ切り替え
@@ -114,6 +114,10 @@ npm run dev
 
 `renderer/public/images/characters` の chara_01.png を上書きしてください。
 
+#### カットイン画像
+
+`renderer/public/images/cut_ins` の cut_01.png を上書きしてください。
+
 #### シナリオ
 
 `renderer/src/mocks/scenario.ts` をエディタで開き、編集して保存してください。
@@ -160,6 +164,11 @@ export const mockScenario: Scenario = {
       },
       type: 1,
       text: "キャラクターのセリフ1",
+    },
+    {
+      cutInFile: "cut_01.png", // カットインを表示する場合、画像のファイル名を指定
+      type: 0,
+      text: "古ぼけた日記を見つけた",
     },
     {
       character: {
