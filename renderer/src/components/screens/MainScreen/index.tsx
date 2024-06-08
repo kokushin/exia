@@ -7,6 +7,7 @@ import { Background } from "@/components/modules/Background";
 import { CutIn } from "@/components/modules/CutIn";
 import { Character } from "@/components/modules/Character";
 import { Navigation } from "@/components/modules/Navigation";
+import { Loading } from "@/components/modules/Loading";
 
 export const MainScreen: React.FC = () => {
   // const [screen, setScreen] = useRecoilState(screenState);
@@ -40,6 +41,7 @@ export const MainScreen: React.FC = () => {
       <CutIn />
       <Message />
       <Navigation />
+      <Loading />
     </>
   );
 };
