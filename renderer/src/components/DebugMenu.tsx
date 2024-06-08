@@ -1,24 +1,30 @@
 import { useRecoilState } from "recoil";
 import { scenarioState } from "@/states/scenarioState";
+import { navigationState } from "@/states/navigationState";
 import { mockScenario } from "@/mocks/scenario";
 
 export const DebugMenu: React.FC = () => {
   const [scenario, setScenario] = useRecoilState(scenarioState);
+  const [navigation, setNavigation] = useRecoilState(navigationState);
 
   return (
     <ul className="fixed top-1 left-1 z-20 flex flex-col gap-2 bg-black bg-opacity-80 text-white text-xs p-2">
       <li>currentLineIndex: {scenario.currentLineIndex}</li>
       <li>
         <button
-          onClick={() =>
+          onClick={() => {
             setScenario({
               ...scenario,
               ...mockScenario,
               currentCharacterIndex: -1,
               currentLineIndex: 0,
               currentLine: scenario.lines[0],
-            })
-          }
+            });
+            setNavigation({
+              ...navigation,
+              isAutoPlay: false,
+            });
+          }}
         >
           Reset
         </button>

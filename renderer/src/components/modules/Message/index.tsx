@@ -1,73 +1,80 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import Typewriter from "typewriter-effect";
 import { useRecoilState } from "recoil";
 import { scenarioState } from "@/states/scenarioState";
+import { navigationState } from "@/states/navigationState";
 import { ChevronDoubleDownIcon } from "@heroicons/react/24/solid";
+import { Navigation } from "@/types";
 
-const MemoizedTypewriter = React.memo(
-  ({ text, setIsShowArrowIcon }: { text: string; setIsShowArrowIcon: (isShow: boolean) => void }) => (
-    <Typewriter
-      key={text}
-      onInit={(typewriter) => {
-        typewriter
-          .callFunction(() => {
-            setIsShowArrowIcon(false);
-          })
-          .typeString(text)
-          .start()
-          .callFunction(() => {
-            setIsShowArrowIcon(true);
-          });
-      }}
-      options={{ delay: 50 }}
-    />
-  )
-);
+// TODO: 設定オブジェクトに移す
+const AUTO_PLAY_DELAY = 2000; // オート再生時のセリフ送りの間隔(ms)
+const DISPLAY_LINE_DELAY = 75; // セリフの表示間隔(ms)
 
 export const Message: React.FC = () => {
   const [scenario, setScenario] = useRecoilState(scenarioState);
+  const [navigation, setNavigation] = useRecoilState(navigationState);
   const [characterName, setCharacterName] = useState("");
   const [isShowArrowIcon, setIsShowArrowIcon] = useState(false);
 
   const handleNextLine = () => {
-    if (scenario.currentLineIndex + 1 > scenario.lines.length - 1) {
+    setIsShowArrowIcon(false);
+    const nextLineIndex = scenario.currentLineIndex + 1;
+
+    // シナリオの末尾に到達したら処理をスキップ
+    if (nextLineIndex > scenario.lines.length - 1) {
+      setNavigation({
+        ...navigation,
+        isAutoPlay: false, // オート再生を終了
+      });
       return;
     }
-    const line = scenario.lines[scenario.currentLineIndex + 1];
+
+    const nextLine = scenario.lines[nextLineIndex];
     const newCharacters = [...scenario.characters];
 
     // セリフにキャラクター画像が指定されている場合、上書きする
-    if (line?.character && line?.character?.imageFile) {
-      newCharacters[line.character.index] = {
-        ...newCharacters[line.character.index],
-        imageFile: line.character.imageFile,
+    if (nextLine.character && nextLine.character?.imageFile) {
+      newCharacters[nextLine.character.index] = {
+        ...newCharacters[nextLine.character.index],
+        imageFile: nextLine.character.imageFile,
       };
     }
 
     // セリフにアニメーションが指定されている場合、上書きする
-    if (line?.character && line?.character?.animation) {
-      newCharacters[line.character.index] = {
-        ...newCharacters[line.character.index],
-        animation: line.character.animation,
+    if (nextLine.character && nextLine.character?.animation) {
+      newCharacters[nextLine.character.index] = {
+        ...newCharacters[nextLine.character.index],
+        animation: nextLine.character.animation,
       };
     }
-
-    const nextLineIndex = scenario.currentLineIndex + 1;
-    const nextLine = scenario.lines[nextLineIndex];
 
     setScenario({
       ...scenario,
       currentLineIndex: nextLineIndex,
       currentLine: nextLine,
-      currentCharacterIndex: line?.character !== undefined ? line.character.index : -1,
+      currentCharacterIndex: nextLine.character !== undefined ? nextLine.character.index : -1,
       characters: newCharacters,
     });
 
     setCharacterName(nextLine?.character ? scenario.characters[nextLine.character.index].name : "");
   };
 
+  useEffect(() => {
+    if (!navigation.isAutoPlay) {
+      return;
+    }
+    handleNextLine();
+  }, [navigation.isAutoPlay]);
+
   const memoizedTypewriter = useMemo(
-    () => <MemoizedTypewriter text={scenario.currentLine?.text || ""} setIsShowArrowIcon={setIsShowArrowIcon} />,
+    () => (
+      <MemoizedTypewriter
+        navigation={navigation}
+        text={scenario.currentLine?.text || ""}
+        handleNextLine={handleNextLine}
+        setIsShowArrowIcon={setIsShowArrowIcon}
+      />
+    ),
     [scenario.currentLine?.text]
   );
 
@@ -96,7 +103,7 @@ export const Message: React.FC = () => {
             </div>
             <div className={`leading-relaxed`}>{memoizedTypewriter}</div>
           </div>
-          {isShowArrowIcon && (
+          {isShowArrowIcon && !navigation.isAutoPlay && (
             <ChevronDoubleDownIcon className="size-4 text-white absolute bottom-4 right-4 animate-bounce" />
           )}
         </div>
@@ -109,7 +116,7 @@ export const Message: React.FC = () => {
             }}
           >
             <div className={`leading-relaxed`}>{memoizedTypewriter}</div>
-            {isShowArrowIcon && (
+            {isShowArrowIcon && !navigation.isAutoPlay && (
               <ChevronDoubleDownIcon className="size-4 text-white absolute bottom-2 right-2 animate-bounce" />
             )}
           </div>
@@ -118,3 +125,37 @@ export const Message: React.FC = () => {
     </>
   );
 };
+
+const MemoizedTypewriter = React.memo(
+  ({
+    navigation,
+    text,
+    handleNextLine,
+    setIsShowArrowIcon,
+  }: {
+    navigation: Navigation;
+    text: string;
+    handleNextLine: () => void;
+    setIsShowArrowIcon: (isShow: boolean) => void;
+  }) => (
+    <Typewriter
+      key={text}
+      onInit={(typewriter) => {
+        typewriter
+          .typeString(text)
+          .start()
+          .callFunction(() => {
+            setIsShowArrowIcon(true);
+            // オート再生が有効だった場合、セリフ送りを行う
+            if (navigation.isAutoPlay) {
+              const timer = setTimeout(() => {
+                handleNextLine();
+                clearTimeout(timer);
+              }, AUTO_PLAY_DELAY);
+            }
+          });
+      }}
+      options={{ delay: DISPLAY_LINE_DELAY }}
+    />
+  )
+);
