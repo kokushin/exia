@@ -1,5 +1,5 @@
 export type Scenario = {
-  id: number;
+  id: string;
   bgmFile?: string;
   backgroundFile?: string;
   currentLineIndex: number;
@@ -15,6 +15,11 @@ export type ScenarioCharacter = {
   isShow: boolean;
 };
 
+export type ScenarioCutIn = {
+  imageFile: string;
+  isFullScreen?: boolean;
+};
+
 export type ScenarioLine = {
   character?: {
     index: number;
@@ -23,7 +28,7 @@ export type ScenarioLine = {
     animation?: string;
     isShow?: boolean;
   };
-  cutInFile?: string;
+  cutIn?: ScenarioCutIn;
   imageFile?: string;
   backgroundFile?: string;
   type: number; // TODO: 定数化する 0=ナレーション, 1=セリフ

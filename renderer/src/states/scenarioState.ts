@@ -11,8 +11,8 @@ export const scenarioState = atom<
 >({
   key: "scenarioState",
   default: {
-    id: 1,
-    backgroundFile: "bg_01.png",
+    id: "",
+    backgroundFile: "bg_01.webp",
     characters: [],
     lines: [],
     currentCharacterIndex: -1,
