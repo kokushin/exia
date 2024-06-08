@@ -29,3 +29,7 @@ export type ScenarioLine = {
   type: number; // TODO: 定数化する 0=ナレーション, 1=セリフ
   text: string;
 };
+
+export type Navigation = {
+  isAutoPlay: boolean;
+};
