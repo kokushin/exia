@@ -4,6 +4,7 @@ import { scenarioState } from "@/states/scenarioState";
 import { mockScenario } from "@/mocks/scenario";
 import { Message } from "@/components/modules/Message";
 import { Background } from "@/components/modules/Background";
+import { CutIn } from "@/components/modules/CutIn";
 import { Character } from "@/components/modules/Character";
 import { Navigation } from "@/components/modules/Navigation";
 
@@ -26,6 +27,7 @@ export const MainScreen: React.FC = () => {
       characters: mockScenario.characters,
       currentCharacterIndex: getCurrentCharacterIndex(mockScenario.lines, mockScenario.currentLineIndex),
       currentLineIndex: mockScenario.currentLineIndex,
+      currentLine: mockScenario.lines[mockScenario.currentLineIndex],
       isFetched: true,
     });
   }, []);
@@ -34,6 +36,7 @@ export const MainScreen: React.FC = () => {
     <>
       <Background />
       <Character />
+      <CutIn />
       <Message />
       <Navigation />
     </>
