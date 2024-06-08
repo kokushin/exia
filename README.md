@@ -169,7 +169,7 @@ export const mockScenario: Scenario = {
     {
       cutInFile: "cut_01.png", // カットインを表示する場合、画像のファイル名を指定
       type: 0,
-      text: "古ぼけた日記を見つけた",
+      text: "カットイン表示",
     },
     {
       character: {
