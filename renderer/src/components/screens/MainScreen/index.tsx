@@ -26,6 +26,7 @@ export const MainScreen: React.FC = () => {
       characters: mockScenario.characters,
       currentCharacterIndex: getCurrentCharacterIndex(mockScenario.lines, mockScenario.currentLineIndex),
       currentLineIndex: mockScenario.currentLineIndex,
+      currentLine: mockScenario.lines[mockScenario.currentLineIndex],
       isFetched: true,
     });
   }, []);

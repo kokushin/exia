@@ -1,9 +1,9 @@
 import { Scenario } from "@/types";
 
 export const mockScenario: Scenario = {
-  id: 1, // シナリオID. 現在機能しません
+  id: 1, // FIXME: シナリオID. 現在機能しません
   backgroundFile: "bg_01.png", // 背景画像のファイル名を指定
-  currentLineIndex: 0, // 現在のセリフ位置. 現在機能しません
+  currentLineIndex: 0, // FIXME: 現在のセリフ位置. 現在機能しません
   characters: [
     // キャラクター情報を配列で格納する
     // 増やした分だけキャラクターが表示される
@@ -11,7 +11,7 @@ export const mockScenario: Scenario = {
       index: 0, // キャラクターの番号. 0が一番左端です
       name: "キャラA", // キャラクターの名前
       imageFile: "chara_01.png", // キャラクター画像のファイル名を指定
-      isShow: true, // 初期表示フラグ. 現在機能しません
+      isShow: true, // FIXME: 初期表示フラグ. 現在機能しません
     },
     {
       index: 1,
@@ -43,6 +43,11 @@ export const mockScenario: Scenario = {
       text: "キャラクターのセリフ1",
     },
     {
+      cutInFile: "cut_01.png", // カットインを表示する場合、画像のファイル名を指定
+      type: 0,
+      text: "古ぼけた日記を見つけた",
+    },
+    {
       character: {
         index: 1,
         imageFile: "chara_02.png",
@@ -53,6 +58,7 @@ export const mockScenario: Scenario = {
     {
       character: {
         index: 0,
+        name: "キャラA(真の姿)", // FIXME: キャラの名前を上書きできる. 現在機能しません
         imageFile: "chara_01.png",
       },
       type: 1,

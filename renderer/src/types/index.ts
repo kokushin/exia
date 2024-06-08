@@ -23,6 +23,7 @@ export type ScenarioLine = {
     animation?: string;
     isShow?: boolean;
   };
+  cutInFile?: string;
   imageFile?: string;
   backgroundFile?: string;
   type: number; // TODO: 定数化する 0=ナレーション, 1=セリフ

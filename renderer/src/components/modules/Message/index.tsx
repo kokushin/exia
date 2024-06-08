@@ -1,5 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { ScenarioLine } from "@/types";
+import React, { useMemo, useState } from "react";
 import Typewriter from "typewriter-effect";
 import { useRecoilState } from "recoil";
 import { scenarioState } from "@/states/scenarioState";
@@ -27,7 +26,7 @@ const MemoizedTypewriter = React.memo(
 
 export const Message: React.FC = () => {
   const [scenario, setScenario] = useRecoilState(scenarioState);
-  const [currentLine, setCurrentLine] = useState<ScenarioLine>();
+  const [characterName, setCharacterName] = useState("");
   const [isShowArrowIcon, setIsShowArrowIcon] = useState(false);
 
   const handleNextLine = () => {
@@ -53,39 +52,26 @@ export const Message: React.FC = () => {
       };
     }
 
+    const nextLineIndex = scenario.currentLineIndex + 1;
+    const nextLine = scenario.lines[nextLineIndex];
+
     setScenario({
       ...scenario,
-      currentLineIndex: scenario.currentLineIndex + 1,
+      currentLineIndex: nextLineIndex,
+      currentLine: nextLine,
       currentCharacterIndex: line?.character !== undefined ? line.character.index : -1,
       characters: newCharacters,
     });
+
+    setCharacterName(nextLine?.character ? scenario.characters[nextLine.character.index].name : "");
   };
 
-  useEffect(() => {
-    if (!scenario.isFetched) {
-      return;
-    }
-    const line = scenario.lines[scenario.currentLineIndex];
-
-    if (line?.character) {
-      setCurrentLine({
-        ...line,
-        character: {
-          ...line.character,
-          name: scenario.characters[line.character.index].name,
-        },
-      });
-    } else {
-      setCurrentLine(line);
-    }
-  }, [scenario]);
-
   const memoizedTypewriter = useMemo(
-    () => <MemoizedTypewriter text={currentLine?.text || ""} setIsShowArrowIcon={setIsShowArrowIcon} />,
-    [currentLine?.text]
+    () => <MemoizedTypewriter text={scenario.currentLine?.text || ""} setIsShowArrowIcon={setIsShowArrowIcon} />,
+    [scenario.currentLine?.text]
   );
 
-  if (!currentLine) {
+  if (scenario.currentLine === undefined) {
     return null;
   }
 
@@ -93,7 +79,7 @@ export const Message: React.FC = () => {
     <>
       <div className="fixed top-0 left-0 z-10 w-full h-full" onClick={handleNextLine} />
       {/* TODO: 定数化する 0=ナレーション, 1=セリフ */}
-      {currentLine.type === 1 ? (
+      {scenario.currentLine.type === 1 ? (
         <div
           className="fixed bottom-0 left-0 w-full h-80"
           style={{ background: "linear-gradient(transparent, #000 100%)" }}
@@ -106,7 +92,7 @@ export const Message: React.FC = () => {
           >
             <div className="relative">
               <div className="w-[3px] h-[1em] bg-white absolute top-1/2 left-0 -mt-[0.5em]" />
-              <div className="pl-3">{currentLine.character.name}</div>
+              <div className="pl-3">{characterName}</div>
             </div>
             <div className={`leading-relaxed`}>{memoizedTypewriter}</div>
           </div>

@@ -1,6 +1,7 @@
 import { useRecoilValue } from "recoil";
 import { scenarioState } from "@/states/scenarioState";
 
+// TODO: 任意の数値を設定できるようにする
 const width = 400;
 
 export const Character: React.FC = () => {
