@@ -8,7 +8,7 @@ import { Navigation } from "@/types";
 
 // TODO: 設定オブジェクトに移す
 const AUTO_PLAY_DELAY = 2000; // オート再生時のセリフ送りの間隔(ms)
-const DISPLAY_LINE_DELAY = 75; // セリフの表示間隔(ms)
+const DISPLAY_LINE_DELAY = 50; // セリフの表示間隔(ms)
 
 export const Message: React.FC = () => {
   const [scenario, setScenario] = useRecoilState(scenarioState);
