@@ -16,6 +16,7 @@ export const DebugMenu: React.FC = () => {
               ...mockScenario,
               currentCharacterIndex: -1,
               currentLineIndex: 0,
+              currentLine: scenario.lines[0],
             })
           }
         >
