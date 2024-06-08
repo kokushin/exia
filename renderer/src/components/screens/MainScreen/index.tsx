@@ -22,6 +22,7 @@ export const MainScreen: React.FC = () => {
   useEffect(() => {
     setScenario({
       ...scenario,
+      id: mockScenario.id,
       backgroundFile: mockScenario.backgroundFile,
       lines: mockScenario.lines,
       characters: mockScenario.characters,
