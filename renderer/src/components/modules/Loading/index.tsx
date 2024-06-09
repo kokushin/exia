@@ -63,7 +63,7 @@ export const Loading: React.FC = () => {
 
   return (
     <div
-      className={`fixed top-0 left-0 z-50 w-full h-full bg-black ${isLoaded ? "pointer-events-none" : ""}`}
+      className={`absolute top-0 left-0 z-50 w-full h-full bg-black ${isLoaded ? "pointer-events-none" : ""}`}
       style={{ opacity: isLoaded ? 0 : 1, transition: `opacity ${FADE_DURATION}ms ease` }}
     >
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col justify-center items-center gap-4 w-full px-8 max-w-[320px]">

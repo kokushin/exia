@@ -28,7 +28,7 @@ export const CutIn: React.FC = () => {
 
   return (
     <div
-      className="fixed top-0 left-0 flex justify-center items-center pointer-events-none w-full h-full"
+      className="absolute top-0 left-0 flex justify-center items-center pointer-events-none w-full h-full"
       style={{ opacity: isShow ? 1 : 0, transition: `opacity ${FADE_DURATION}ms ease` }}
     >
       {imageFile && (

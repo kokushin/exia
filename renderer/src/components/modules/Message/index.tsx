@@ -84,11 +84,11 @@ export const Message: React.FC = () => {
 
   return (
     <>
-      <div className="fixed top-0 left-0 z-10 w-full h-full" onClick={handleNextLine} />
+      <div className="absolute top-0 left-0 z-10 w-full h-full" onClick={handleNextLine} />
       {/* TODO: 定数化する 0=ナレーション, 1=セリフ */}
       {scenario.currentLine.type === 1 ? (
         <div
-          className="fixed bottom-0 left-0 w-full h-80"
+          className="absolute bottom-0 left-0 w-full h-80"
           style={{ background: "linear-gradient(transparent, #000 100%)" }}
         >
           <div
@@ -108,7 +108,7 @@ export const Message: React.FC = () => {
           )}
         </div>
       ) : (
-        <div className="fixed bottom-0 left-0 p-4 w-full text-center">
+        <div className="absolute bottom-0 left-0 p-4 w-full text-center">
           <div
             className="relative flex flex-col justify-center items-center gap-4 text-white md:text-lg w-full bg-black bg-opacity-80 min-h-24 py-6 px-4 drop-shadow-md"
             style={{

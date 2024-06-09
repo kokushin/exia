@@ -22,7 +22,7 @@ export const Navigation: React.FC = () => {
   };
 
   return (
-    <nav className="fixed top-0 right-0 z-20 flex items-center gap-4 text-white text-sm p-4">
+    <nav className="absolute top-0 right-0 z-20 flex items-center gap-4 text-white text-sm p-4">
       {items.map((item, i) => (
         <button
           onClick={item.action}
