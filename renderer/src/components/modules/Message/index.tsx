@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import { memo, useMemo, useState, useEffect } from "react";
 import Typewriter from "typewriter-effect";
 import { useRecoilState } from "recoil";
 import { scenarioState } from "@/states/scenarioState";
@@ -30,20 +30,20 @@ export const Message: React.FC = () => {
     }
 
     const nextLine = scenario.lines[nextLineIndex];
-    const newCharacters = [...scenario.characters];
+    const characters = [...scenario.characters];
 
     // セリフにキャラクター画像が指定されている場合、上書きする
     if (nextLine.character && nextLine.character?.imageFile) {
-      newCharacters[nextLine.character.index] = {
-        ...newCharacters[nextLine.character.index],
+      characters[nextLine.character.index] = {
+        ...characters[nextLine.character.index],
         imageFile: nextLine.character.imageFile,
       };
     }
 
     // セリフにアニメーションが指定されている場合、上書きする
     if (nextLine.character && nextLine.character?.animation) {
-      newCharacters[nextLine.character.index] = {
-        ...newCharacters[nextLine.character.index],
+      characters[nextLine.character.index] = {
+        ...characters[nextLine.character.index],
         animation: nextLine.character.animation,
       };
     }
@@ -53,7 +53,7 @@ export const Message: React.FC = () => {
       currentLineIndex: nextLineIndex,
       currentLine: nextLine,
       currentCharacterIndex: nextLine.character !== undefined ? nextLine.character.index : -1,
-      characters: newCharacters,
+      characters: characters,
     });
 
     setCharacterName(nextLine?.character ? scenario.characters[nextLine.character.index].name : "");
@@ -126,7 +126,7 @@ export const Message: React.FC = () => {
   );
 };
 
-const MemoizedTypewriter = React.memo(
+const MemoizedTypewriter = memo(
   ({
     navigation,
     text,
