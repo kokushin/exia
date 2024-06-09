@@ -1,3 +1,7 @@
+// VOICEVOXと連携してシナリオデータから音声ファイルを生成する
+// ローカル環境でVOICEVOXを起動しておくこと
+// https://voicevox.hiroshiba.jp/
+
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
