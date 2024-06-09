@@ -12,6 +12,7 @@ export type ScenarioCharacter = {
   name: string;
   imageFile: string;
   animation?: string;
+  speakerId?: number;
   isShow: boolean;
 };
 
