@@ -1,6 +1,7 @@
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
+// TODO: すべてのjsonファイルを読み込むように修正
 const mockScenario = require("../renderer/src/scenarios/S_000.json");
 
 // voicevox APIのエンドポイント
