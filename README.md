@@ -121,9 +121,11 @@ npm run dev
 
 #### シナリオ
 
-`renderer/src/mocks/scenario.ts` をエディタで開き、編集して保存してください。
+`renderer/src/scenarios/S_000.json` をエディタで開き、編集して保存してください。
 
 ```ts
+// 構成と型の参考
+// renderer/src/mocks/scenario.ts
 export const mockScenario: Scenario = {
   id: 1, // シナリオID. 現在機能しません
   backgroundFile: "bg_01.png", // 背景画像のファイル名を指定

@@ -1,0 +1,98 @@
+{
+  "id": "S_000",
+  "backgroundFile": "bg_01.webp",
+  "currentLineIndex": 0,
+  "characters": [
+    {
+      "index": 0,
+      "name": "キャラA",
+      "imageFile": "chara_01.webp",
+      "isShow": true
+    },
+    {
+      "index": 1,
+      "name": "キャラB",
+      "imageFile": "chara_02.webp",
+      "isShow": true
+    }
+  ],
+  "lines": [
+    {
+      "type": 0,
+      "text": "説明テキスト"
+    },
+    {
+      "character": {
+        "index": 0
+      },
+      "type": 0,
+      "text": "キャラクター移動"
+    },
+    {
+      "character": {
+        "index": 0,
+        "imageFile": "chara_01.webp"
+      },
+      "type": 1,
+      "text": "キャラクターのセリフ1"
+    },
+    {
+      "cutIn": {
+        "imageFile": "cut_01.webp"
+      },
+      "type": 0,
+      "text": "カットイン表示"
+    },
+    {
+      "type": 0,
+      "text": "カットイン非表示"
+    },
+    {
+      "cutIn": {
+        "imageFile": "cg_01.webp",
+        "isFullScreen": true
+      },
+      "type": 0,
+      "text": "CG表示"
+    },
+    {
+      "cutIn": {
+        "imageFile": "cg_01.webp",
+        "isFullScreen": true
+      },
+      "character": {
+        "index": 1
+      },
+      "type": 1,
+      "text": "CG中のキャラクターのセリフ"
+    },
+    {
+      "character": {
+        "index": 1
+      },
+      "type": 0,
+      "text": "CG非表示"
+    },
+    {
+      "character": {
+        "index": 1,
+        "imageFile": "chara_02.webp"
+      },
+      "type": 1,
+      "text": "キャラクターのセリフ2<br>改行<br><span style=\"font-size:24px\">テキストの大きさ変更</span>"
+    },
+    {
+      "character": {
+        "index": 0,
+        "name": "キャラA(真の姿)",
+        "imageFile": "chara_01.webp"
+      },
+      "type": 1,
+      "text": "キャラクターのセリフ3"
+    },
+    {
+      "type": 0,
+      "text": "デバッグ終了"
+    }
+  ]
+}
