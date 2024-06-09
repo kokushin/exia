@@ -6,8 +6,8 @@ import { mockScenario } from "@/mocks/scenario";
 const LOADING_DELAY = 500;
 
 export const Loading: React.FC = () => {
-  const [loadedImages, setLoadedImages] = useState<number>(0);
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [loadedImages, setLoadedImages] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const cacheImages = async () => {
