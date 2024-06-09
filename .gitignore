@@ -39,4 +39,4 @@ main
 dist
 renderer/.next
 renderer/out
-renderer/public/audios/voices
+# renderer/public/audios/voices
