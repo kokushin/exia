@@ -1,7 +1,7 @@
 import { useRecoilState } from "recoil";
 import { scenarioState } from "@/states/scenarioState";
 import { navigationState } from "@/states/navigationState";
-import { mockScenario } from "@/mocks/scenario";
+import mockScenario from "@/scenarios/S_000.json";
 
 export const DebugMenu: React.FC = () => {
   const [scenario, setScenario] = useRecoilState(scenarioState);

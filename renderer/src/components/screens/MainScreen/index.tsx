@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { scenarioState } from "@/states/scenarioState";
-import { mockScenario } from "@/mocks/scenario";
+// import { mockScenario } from "@/mocks/scenario";
+import mockScenario from "@/scenarios/S_000.json";
 import { getCurrentCharacterIndex } from "@/utils";
 import { Message } from "@/components/modules/Message";
 import { Background } from "@/components/modules/Background";

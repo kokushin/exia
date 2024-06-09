@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { mockScenario } from "@/mocks/scenario";
+import mockScenario from "@/scenarios/S_000.json";
 
 // TODO: mockScenario は親コンポーネントから受け取るように修正
 

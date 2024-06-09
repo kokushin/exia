@@ -13,7 +13,7 @@ const DISPLAY_LINE_DELAY = 50; // セリフの表示間隔(ms)
 export const Message: React.FC = () => {
   const [scenario, setScenario] = useRecoilState(scenarioState);
   const [navigation, setNavigation] = useRecoilState(navigationState);
-  const [characterName, setCharacterName] = useState("");
+  const [characterName, setCharacterName] = useState(undefined);
   const [isShowArrowIcon, setIsShowArrowIcon] = useState(false);
 
   const handleNextLine = () => {
@@ -56,7 +56,7 @@ export const Message: React.FC = () => {
       characters: characters,
     });
 
-    setCharacterName(nextLine?.character ? scenario.characters[nextLine.character.index].name : "");
+    setCharacterName(nextLine?.character ? scenario.characters[nextLine.character.index].name : undefined);
   };
 
   useEffect(() => {
@@ -97,10 +97,12 @@ export const Message: React.FC = () => {
               textShadow: "1px 1px 0 rgba(0,0,0,.5)",
             }}
           >
-            <div className="relative">
-              <div className="w-[3px] h-[1em] bg-white absolute top-1/2 left-0 -mt-[0.5em]" />
-              <div className="pl-3">{characterName}</div>
-            </div>
+            {characterName && (
+              <div className="relative">
+                <div className="w-[3px] h-[1em] bg-white absolute top-1/2 left-0 -mt-[0.5em]" />
+                <div className="pl-3">{characterName}</div>
+              </div>
+            )}
             <div className={`leading-relaxed`}>{memoizedTypewriter}</div>
           </div>
           {isShowArrowIcon && !navigation.isAutoPlay && (
