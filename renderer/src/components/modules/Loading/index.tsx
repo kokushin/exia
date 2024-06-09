@@ -3,7 +3,8 @@ import { mockScenario } from "@/mocks/scenario";
 
 // TODO: mockScenario は親コンポーネントから受け取るように修正
 
-const LOADING_DELAY = 500;
+const FADE_DURATION = 1000; // フェードアウトの再生速度(ms)
+const LOADING_DELAY = 500; // 読み込み完了後の遅延(ms)
 
 export const Loading: React.FC = () => {
   const [loadedImages, setLoadedImages] = useState(0);
@@ -63,7 +64,7 @@ export const Loading: React.FC = () => {
   return (
     <div
       className={`fixed top-0 left-0 z-50 w-full h-full bg-black ${isLoaded ? "pointer-events-none" : ""}`}
-      style={{ opacity: isLoaded ? 0 : 1, transition: "opacity 1s" }}
+      style={{ opacity: isLoaded ? 0 : 1, transition: `opacity ${FADE_DURATION}ms ease` }}
     >
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col justify-center items-center gap-4 w-full px-8 max-w-[320px]">
         <div className="relative w-full h-[2px] bg-white bg-opacity-10">
