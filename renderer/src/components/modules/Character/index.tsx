@@ -1,11 +1,11 @@
-import { useRecoilValue } from "recoil";
+import { useAtomValue } from "jotai";
 import { scenarioState } from "@/states/scenarioState";
 
 // TODO: 任意の数値を設定できるようにする
 const IMAGE_WIDTH = 400;
 
 export const Character: React.FC = () => {
-  const { characters, currentCharacterIndex } = useRecoilValue(scenarioState);
+  const { characters, currentCharacterIndex } = useAtomValue(scenarioState);
 
   const translateX = () => {
     if (currentCharacterIndex === -1) {

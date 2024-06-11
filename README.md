@@ -191,15 +191,21 @@ export const mockScenario: Scenario = {
 
 ## 🎙 VOICEVOX 連携
 
-仮実装ですが、VOICEVOX を使用して音声ファイルを書き出すことができます。
+仮実装ですが、[VOICEVOX](https://voicevox.hiroshiba.jp/) を使用して音声ファイルを書き出すことができます。
 
-VOICEVOX 本体をダウンロードして、ローカルサーバを起動します。<br>
-※http://127.0.0.1:50021 で VOICEVOX にアクセスできることを確認してください
+VOICEVOX 本体をダウンロードして、ローカルサーバを起動します。
 
-https://voicevox.hiroshiba.jp/
+`renderer/src/constants/index.ts` の CONFIG.VOICEVOX フラグを `true` にします。
+
+```js
+export const CONFIG = {
+  ...
+  VOICEVOX: true,
+};
+```
 
 `renderer/src/scenarios/S_000.json` の `characters` のオブジェクト内に `speakerId` を設定します。<br>
-※VOICEVOX の speakerId を参照してください
+※ VOICEVOX の speakerId を参照してください
 
 ```js
 {

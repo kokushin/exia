@@ -1,11 +1,11 @@
-import { useRecoilState } from "recoil";
+import { useAtom } from "jotai";
 import { scenarioState } from "@/states/scenarioState";
 import { navigationState } from "@/states/navigationState";
 import mockScenario from "@/scenarios/S_000.json";
 
 export const DebugMenu: React.FC = () => {
-  const [scenario, setScenario] = useRecoilState(scenarioState);
-  const [navigation, setNavigation] = useRecoilState(navigationState);
+  const [scenario, setScenario] = useAtom(scenarioState);
+  const [navigation, setNavigation] = useAtom(navigationState);
 
   return (
     <ul className="absolute top-1 left-1 z-20 flex flex-col gap-2 bg-black bg-opacity-80 text-white text-xs p-2">

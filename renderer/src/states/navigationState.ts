@@ -1,9 +1,6 @@
-import { atom } from "recoil";
+import { atom } from "jotai";
 import { Navigation } from "@/types";
 
 export const navigationState = atom<Navigation>({
-  key: "navigationState",
-  default: {
-    isAutoPlay: false,
-  },
+  isAutoPlay: false,
 });
