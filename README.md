@@ -196,7 +196,7 @@ export const mockScenario: Scenario = {
 `renderer/src/scenarios/S_000.json` の `characters` のオブジェクト内に `speakerId` を設定します。
 ※VOICEVOX の speakerId を参照してください。
 
-```json
+```js
 {
   "index": 0,
   "name": "キャラA",
