@@ -27,7 +27,7 @@ export const Character: React.FC = () => {
         (character, i) =>
           character.isShow && (
             <div
-              className="relative flex flex-col justify-end min-h-screen transition-transform duration-500"
+              className="relative flex flex-col justify-end min-h-[100svh] transition-transform duration-500"
               style={{
                 minWidth: IMAGE_WIDTH,
                 maxWidth: IMAGE_WIDTH,
