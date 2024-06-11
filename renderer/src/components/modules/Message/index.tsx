@@ -1,18 +1,18 @@
 import { memo, useMemo, useState, useEffect } from "react";
 import Typewriter from "typewriter-effect";
-import { useRecoilState } from "recoil";
+import { useAtom } from "jotai";
 import { scenarioState } from "@/states/scenarioState";
 import { navigationState } from "@/states/navigationState";
 import { ChevronDoubleDownIcon } from "@heroicons/react/24/solid";
-import { Navigation } from "@/types";
+import { Navigation as NavigationType } from "@/types";
 
 // TODO: 設定オブジェクトに移す
 const AUTO_PLAY_DELAY = 2000; // オート再生時のセリフ送りの間隔(ms)
 const DISPLAY_LINE_DELAY = 50; // セリフの表示間隔(ms)
 
 export const Message: React.FC = () => {
-  const [scenario, setScenario] = useRecoilState(scenarioState);
-  const [navigation, setNavigation] = useRecoilState(navigationState);
+  const [scenario, setScenario] = useAtom(scenarioState);
+  const [navigation, setNavigation] = useAtom(navigationState);
   const [characterName, setCharacterName] = useState(undefined);
   const [isShowArrowIcon, setIsShowArrowIcon] = useState(false);
 
@@ -135,7 +135,7 @@ const MemoizedTypewriter = memo(
     handleNextLine,
     setIsShowArrowIcon,
   }: {
-    navigation: Navigation;
+    navigation: NavigationType;
     text: string;
     handleNextLine: () => void;
     setIsShowArrowIcon: (isShow: boolean) => void;

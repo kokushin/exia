@@ -1,8 +1,8 @@
-import { useRecoilValue } from "recoil";
+import { useAtomValue } from "jotai";
 import { scenarioState } from "@/states/scenarioState";
 
 export const Background: React.FC = () => {
-  const scenario = useRecoilValue(scenarioState);
+  const scenario = useAtomValue(scenarioState);
 
   return (
     <div

@@ -1,9 +1,9 @@
-import { useRecoilState } from "recoil";
+import { useAtom } from "jotai";
 import { navigationState } from "@/states/navigationState";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 
 export const Navigation: React.FC = () => {
-  const [navigation, setNavigation] = useRecoilState(navigationState);
+  const [navigation, setNavigation] = useAtom(navigationState);
 
   const items = [
     { label: "SAVE", action: undefined },

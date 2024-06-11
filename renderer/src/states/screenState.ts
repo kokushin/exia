@@ -1,9 +1,6 @@
-import { atom } from "recoil";
+import { atom } from "jotai";
 import { SCREEN } from "@/constants";
 
 export type ScreenType = (typeof SCREEN)[keyof typeof SCREEN];
 
-export const screenState = atom<ScreenType>({
-  key: "screenState",
-  default: SCREEN.MAIN_SCREEN,
-});
+export const screenState = atom<ScreenType>(SCREEN.MAIN_SCREEN);

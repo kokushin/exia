@@ -1,9 +1,9 @@
-import { useRecoilValue } from "recoil";
+import { useAtomValue } from "jotai";
 import { scenarioState } from "@/states/scenarioState";
 import { CONFIG } from "@/constants";
 
 export const Voice: React.FC = () => {
-  const scenario = useRecoilValue(scenarioState);
+  const scenario = useAtomValue(scenarioState);
 
   if (
     !CONFIG.VOICEVOX ||
