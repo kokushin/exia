@@ -1,49 +1,41 @@
 import { useState, useEffect } from "react";
+// TODO: isFetched が true になったら scenario を参照するように修正
 import mockScenario from "@/scenarios/S_000.json";
-
-// TODO: mockScenario は親コンポーネントから受け取るように修正
+import { CONFIG } from "@/constants";
 
 const FADE_DURATION = 1000; // フェードアウトの再生速度(ms)
 const LOADING_DELAY = 500; // 読み込み完了後の遅延(ms)
 
 export const Loading: React.FC = () => {
-  const [loadedImages, setLoadedImages] = useState(0);
+  const [loadedAssets, setLoadedAssets] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const cacheImages = async () => {
-      const allImages: string[] = [];
+    const cacheAssets = async () => {
+      const allAssets: string[] = [];
 
       // 背景画像のパスをキャッシュ
-      allImages.push(`./images/backgrounds/${mockScenario.backgroundFile}`);
+      allAssets.push(`./images/backgrounds/${mockScenario.backgroundFile}`);
 
       // キャラクター画像のパスをキャッシュ
       mockScenario.characters.forEach((character) => {
-        allImages.push(`./images/characters/${character.imageFile}`);
+        allAssets.push(`./images/characters/${character.imageFile}`);
       });
 
-      // CG画像のパスをキャッシュ
-      mockScenario.lines.forEach((line) => {
+      // CG画像のパスと音声ファイルをキャッシュ
+      mockScenario.lines.forEach((line, index) => {
         if (line.character && line.character.imageFile) {
-          allImages.push(`./images/characters/${line.character.imageFile}`);
+          allAssets.push(`./images/characters/${line.character.imageFile}`);
         }
         if (line.cutIn && line.cutIn.imageFile) {
-          allImages.push(`./images/cut_ins/${line.cutIn.imageFile}`);
+          allAssets.push(`./images/cut_ins/${line.cutIn.imageFile}`);
+        }
+        if (CONFIG.VOICEVOX && line.character && line.text && line.type === 1) {
+          allAssets.push(`./audios/voices/${mockScenario.id}_${index}.wav`);
         }
       });
 
-      const promises = allImages.map((src) => {
-        return new Promise<void>((resolve, reject) => {
-          const img = new Image();
-          img.src = src;
-          img.onload = () => {
-            setLoadedImages((prev) => prev + 1);
-            resolve();
-          };
-          img.onerror = reject;
-        });
-      });
-
+      const promises = allAssets.map((src) => cacheAsset(src, setLoadedAssets));
       await Promise.all(promises);
 
       const timer = setTimeout(() => {
@@ -52,14 +44,11 @@ export const Loading: React.FC = () => {
       }, LOADING_DELAY);
     };
 
-    cacheImages();
+    cacheAssets();
   }, [mockScenario]);
 
-  const totalImages =
-    mockScenario.characters.length +
-    mockScenario.lines.filter((line) => line.character?.imageFile || line.cutIn?.imageFile).length +
-    1;
-  const progress = Math.round((loadedImages / totalImages) * 100);
+  const totalAssets = getTotalAssetsCount(mockScenario, CONFIG);
+  const progress = Math.round((loadedAssets / totalAssets) * 100);
 
   return (
     <div
@@ -68,7 +57,7 @@ export const Loading: React.FC = () => {
     >
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col justify-center items-center gap-4 w-full px-8 max-w-[320px]">
         <div className="relative w-full h-[2px] bg-white bg-opacity-10">
-          <div className={`absolute top-0 left-0 h-full bg-white`} style={{ width: `${progress}%` }} />
+          <div className="absolute top-0 left-0 h-full bg-white" style={{ width: `${progress}%` }} />
         </div>
         <div className="flex items-center gap-2 text-white text-sm">
           <div>Loading...</div>
@@ -76,5 +65,44 @@ export const Loading: React.FC = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const cacheAsset = (src: string, setLoadedAssets: React.Dispatch<React.SetStateAction<number>>) => {
+  return new Promise<void>((resolve) => {
+    if (src.endsWith(".wav")) {
+      const audio = new Audio();
+      audio.src = src;
+      audio.onloadeddata = () => {
+        setLoadedAssets((prev) => prev + 1);
+        resolve();
+      };
+      audio.onerror = () => {
+        // wavファイルが見つからない場合はスキップ
+        console.warn(`File not found: ${src}`);
+        resolve();
+      };
+    } else {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        setLoadedAssets((prev) => prev + 1);
+        resolve();
+      };
+      img.onerror = () => {
+        console.warn(`Failed to load image: ${src}`);
+        resolve();
+      };
+    }
+  });
+};
+
+const getTotalAssetsCount = (mockScenario, CONFIG) => {
+  return (
+    1 + // 背景画像
+    mockScenario.characters.length + // キャラクター画像
+    mockScenario.lines.filter((line) => line.character?.imageFile).length + // キャラクター画像
+    mockScenario.lines.filter((line) => line.cutIn?.imageFile).length + // カットイン画像
+    (CONFIG.VOICEVOX ? mockScenario.lines.filter((line) => line.character && line.text && line.type === 1).length : 0) // 音声ファイル
   );
 };

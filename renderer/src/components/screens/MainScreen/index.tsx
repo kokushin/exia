@@ -10,6 +10,7 @@ import { CutIn } from "@/components/modules/CutIn";
 import { Character } from "@/components/modules/Character";
 import { Navigation } from "@/components/modules/Navigation";
 import { Loading } from "@/components/modules/Loading";
+import { Voice } from "@/components/modules/Voice";
 
 export const MainScreen: React.FC = () => {
   const [scenario, setScenario] = useRecoilState(scenarioState);
@@ -30,6 +31,7 @@ export const MainScreen: React.FC = () => {
 
   return (
     <>
+      <Voice />
       <Background />
       <Character />
       <CutIn />

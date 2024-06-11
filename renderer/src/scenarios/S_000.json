@@ -7,13 +7,15 @@
       "index": 0,
       "name": "キャラA",
       "imageFile": "chara_01.webp",
-      "isShow": true
+      "isShow": true,
+      "speakerId": 3
     },
     {
       "index": 1,
       "name": "キャラB",
       "imageFile": "chara_02.webp",
-      "isShow": true
+      "isShow": true,
+      "speakerId": 2
     }
   ],
   "lines": [

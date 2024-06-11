@@ -12,12 +12,14 @@ export const mockScenario: Scenario = {
       name: "キャラA", // キャラクターの名前
       imageFile: "chara_01.webp", // キャラクター画像のファイル名を指定
       isShow: true, // FIXME: 初期表示フラグ. 現在機能しません
+      speakerId: 3, // voicevoxのspeakerIdを指定
     },
     {
       index: 1,
       name: "キャラB",
       imageFile: "chara_02.webp",
       isShow: true,
+      speakerId: 2,
     },
   ],
   lines: [
