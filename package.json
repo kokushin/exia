@@ -16,11 +16,13 @@
     "build": "npm run build-renderer && npm run build-electron",
     "pack-app": "npm run build && electron-builder --dir",
     "dist": "npm run build && electron-builder",
-    "type-check": "tsc -p ./renderer/tsconfig.json && tsc -p ./electron-src/tsconfig.json"
+    "type-check": "tsc -p ./renderer/tsconfig.json && tsc -p ./electron-src/tsconfig.json",
+    "build-voice": "node scripts/generateVoices.js"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.3",
     "autoprefixer": "^10.4.18",
+    "axios": "^1.7.2",
     "electron-is-dev": "^1.2.0",
     "electron-next": "^3.1.5",
     "next": "^14.2.3",

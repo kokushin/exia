@@ -1,6 +1,7 @@
 export const CONFIG = {
   TITLE: "Exia - Novel game engine",
   LANGUAGE: "ja",
+  VOICEVOX: true,
 };
 
 export const SCREEN = {
