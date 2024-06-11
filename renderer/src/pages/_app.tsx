@@ -2,7 +2,6 @@ import "tailwindcss/tailwind.css";
 import "@/styles/common.css";
 import { CONFIG } from "@/constants";
 import Head from "next/head";
-import { RecoilRoot } from "recoil";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -12,9 +11,7 @@ function MyApp({ Component, pageProps }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <RecoilRoot>
-        <Component {...pageProps} />
-      </RecoilRoot>
+      <Component {...pageProps} />
     </div>
   );
 }

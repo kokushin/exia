@@ -1,5 +1,5 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
+import { useAtomValue } from "jotai";
 import { screenState } from "@/states/screenState";
 import { SCREEN } from "@/constants";
 import { Layout } from "@/components/Layout";
@@ -9,7 +9,7 @@ import { MainScreen } from "@/components/screens/MainScreen";
 import { EndingScreen } from "@/components/screens/EndingScreen";
 
 const IndexPage = () => {
-  const screen = useRecoilValue(screenState);
+  const screen = useAtomValue(screenState);
 
   return (
     <Layout>

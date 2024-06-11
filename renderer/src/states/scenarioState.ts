@@ -1,4 +1,4 @@
-import { atom } from "recoil";
+import { atom } from "jotai";
 import { Scenario, ScenarioLine } from "@/types";
 
 export const scenarioState = atom<
@@ -9,16 +9,13 @@ export const scenarioState = atom<
     isFetched: boolean;
   }
 >({
-  key: "scenarioState",
-  default: {
-    id: "",
-    backgroundFile: "bg_01.webp",
-    characters: [],
-    lines: [],
-    currentCharacterIndex: -1,
-    currentLineIndex: 0,
-    currentLine: undefined,
-    logs: [],
-    isFetched: false,
-  },
+  id: "",
+  backgroundFile: "bg_01.webp",
+  characters: [],
+  lines: [],
+  currentCharacterIndex: -1,
+  currentLineIndex: 0,
+  currentLine: undefined,
+  logs: [],
+  isFetched: false,
 });

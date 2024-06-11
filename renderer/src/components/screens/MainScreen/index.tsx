@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useAtom } from "jotai";
 import { scenarioState } from "@/states/scenarioState";
 // import { mockScenario } from "@/mocks/scenario";
 import mockScenario from "@/scenarios/S_000.json";
@@ -13,7 +13,7 @@ import { Loading } from "@/components/modules/Loading";
 import { Voice } from "@/components/modules/Voice";
 
 export const MainScreen: React.FC = () => {
-  const [scenario, setScenario] = useRecoilState(scenarioState);
+  const [scenario, setScenario] = useAtom(scenarioState);
 
   useEffect(() => {
     setScenario({

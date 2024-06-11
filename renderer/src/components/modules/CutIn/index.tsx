@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useAtomValue } from "jotai";
 import { scenarioState } from "@/states/scenarioState";
 
 // フェードイン・アウトの再生速度(ms)
 const FADE_DURATION = 500;
 
 export const CutIn: React.FC = () => {
-  const scenario = useRecoilValue(scenarioState);
+  const scenario = useAtomValue(scenarioState);
   const [isShow, setIsShow] = useState(false);
   const [imageFile, setImageFile] = useState(undefined);
   const [isFullScreen, setIsFullScreen] = useState(false);
