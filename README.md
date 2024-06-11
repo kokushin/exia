@@ -193,8 +193,13 @@ export const mockScenario: Scenario = {
 
 仮実装ですが、VOICEVOX を使用して音声ファイルを書き出すことができます。
 
-`renderer/src/scenarios/S_000.json` の `characters` のオブジェクト内に `speakerId` を設定します。
-※VOICEVOX の speakerId を参照してください。
+VOICEVOX 本体をダウンロードして、ローカルサーバを起動します。<br>
+※http://127.0.0.1:50021 で VOICEVOX にアクセスできることを確認してください
+
+https://voicevox.hiroshiba.jp/
+
+`renderer/src/scenarios/S_000.json` の `characters` のオブジェクト内に `speakerId` を設定します。<br>
+※VOICEVOX の speakerId を参照してください
 
 ```js
 {
