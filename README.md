@@ -60,7 +60,7 @@ Google Chrome での閲覧を推奨します。
 - その他
   - [x] Windows/MacOS 向けアプリケーションコンパイル
   - [ ] 画面録画・書き出し機能
-  - [ ] VOICEVOX 連携
+  - [x] VOICEVOX 連携
   - [ ] 多言語対応(英語/中国語)
   - [ ] 専用 GUI エディタ
   - [ ] 処理最適化・リファクタリング
@@ -188,6 +188,31 @@ export const mockScenario: Scenario = {
 
 上記の仕様はモックアップ段階であり、今後変更される可能性が高いです。<br>
 設計に関してご提案がありましたら、お気軽に改善案をお送りください！
+
+## 🎙 VOICEVOX 連携
+
+仮実装ですが、VOICEVOX を使用して音声ファイルを書き出すことができます。
+
+`renderer/src/scenarios/S_000.json` の `characters` のオブジェクト内に `speakerId` を設定します。
+※VOICEVOX の speakerId を参照してください。
+
+```json
+{
+  "index": 0,
+  "name": "キャラA",
+  "imageFile": "chara_01.webp",
+  "isShow": true,
+  "speakerId": 3 // ずんだもん(ノーマル)
+},
+```
+
+下記コマンドを実行すると、`public/audios/voices` 配下に wav ファイルを生成します。
+
+```bash
+npm run build-voice
+```
+
+キャラクターのセリフが設定されている箇所の音声が生成されます。
 
 ## 👨‍💻 開発者向けドキュメント
 
