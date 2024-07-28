@@ -8,6 +8,7 @@ import { ChevronDoubleDownIcon } from "@heroicons/react/24/solid";
 import { Navigation as NavigationType } from "@/types";
 
 // TODO: 設定オブジェクトに移す
+const LOADING_DELAY = 1000; // ローディング後のセリフ表示間隔(ms)
 const AUTO_PLAY_DELAY = 2000; // オート再生時のセリフ送りの間隔(ms)
 const DISPLAY_LINE_DELAY = 50; // セリフの表示間隔(ms)
 
@@ -17,6 +18,7 @@ export const Message: React.FC = () => {
   const [navigation, setNavigation] = useAtom(navigationState);
   const [characterName, setCharacterName] = useState(undefined);
   const [isShowArrowIcon, setIsShowArrowIcon] = useState(false);
+  const [isShowText, setIsShowText] = useState(false);
 
   const handleNextLine = () => {
     setIsShowArrowIcon(false);
@@ -77,6 +79,14 @@ export const Message: React.FC = () => {
     setCharacterName(scenario.characters[scenario.currentCharacterIndex].name);
   }, [scenario]);
 
+  useEffect(() => {
+    // ローディング後のセリフ表示を遅延する
+    const timer = setTimeout(() => {
+      setIsShowText(true);
+      clearTimeout(timer);
+    }, LOADING_DELAY);
+  }, []);
+
   const memoizedTypewriter = useMemo(
     () => (
       <MemoizedTypewriter
@@ -114,7 +124,7 @@ export const Message: React.FC = () => {
                 <div className="pl-3">{characterName}</div>
               </div>
             )}
-            <div className={`leading-relaxed`}>{memoizedTypewriter}</div>
+            {isShowText && <div className={`leading-relaxed`}>{memoizedTypewriter}</div>}
           </div>
           {isShowArrowIcon && !navigation.isAutoPlay && (
             <ChevronDoubleDownIcon className="size-4 text-white absolute bottom-4 right-4 animate-bounce" />
@@ -128,7 +138,7 @@ export const Message: React.FC = () => {
               textShadow: "1px 1px 0 rgba(0,0,0,.5)",
             }}
           >
-            <div className={`leading-relaxed`}>{memoizedTypewriter}</div>
+            {isShowText && <div className={`leading-relaxed`}>{memoizedTypewriter}</div>}
             {isShowArrowIcon && !navigation.isAutoPlay && (
               <ChevronDoubleDownIcon className="size-4 text-white absolute bottom-2 right-2 animate-bounce" />
             )}
