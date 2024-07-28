@@ -125,7 +125,7 @@ npm run dev
 
 ```ts
 // 構成と型の参考
-// renderer/src/scenarios
+// renderer/src/scenarios.json
 export const mockScenario: Scenario = {
   id: 1, // シナリオID. 現在機能しません
   backgroundFile: "bg_01.png", // 背景画像のファイル名を指定
