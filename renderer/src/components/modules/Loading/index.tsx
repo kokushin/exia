@@ -64,7 +64,7 @@ export const Loading: React.FC = () => {
         <div className="absolute top-4 left-4 w-4 h-4 rotate-45 before:content-[''] before:w-4 before:h-[2px] before:bg-white before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 after:content-[''] after:w-[2px] after:h-4 after:bg-white after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 animate-loading-effect-odd" />
       </div>
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col justify-center items-center gap-4 w-full px-8 max-w-[320px]">
-        <div className="relative w-full h-[2px] bg-white bg-opacity-10">
+        <div className="relative w-full h-[2px] bg-white bg-opacity-10 overflow-hidden">
           <div className="absolute top-0 left-0 h-full bg-white" style={{ width: `${progress}%` }} />
         </div>
         <div className="flex items-center gap-2 text-white text-sm">

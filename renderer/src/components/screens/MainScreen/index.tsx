@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useAtom } from "jotai";
 import { scenarioState } from "@/states/scenarioState";
-// import { mockScenario } from "@/mocks/scenario";
 import mockScenario from "@/scenarios/S_000.json";
 import { getCurrentCharacterIndex } from "@/utils";
 import { Message } from "@/components/modules/Message";

@@ -9,7 +9,7 @@ Inspired by the UX/UI of “勝利の女神:NIKKE”.</b>
 
 ## 🚧 重要事項
 
-Exia は現在開発中です。全体の進捗は 10% くらいです。<br>
+Exia は現在開発中です。全体の進捗は 20% くらいです。<br>
 [@kokushing](https://x.com/kokushing) をフォローして更新をお待ちください！
 
 ## 📝 概要
@@ -125,7 +125,7 @@ npm run dev
 
 ```ts
 // 構成と型の参考
-// renderer/src/mocks/scenario.ts
+// renderer/src/scenarios
 export const mockScenario: Scenario = {
   id: 1, // シナリオID. 現在機能しません
   backgroundFile: "bg_01.png", // 背景画像のファイル名を指定

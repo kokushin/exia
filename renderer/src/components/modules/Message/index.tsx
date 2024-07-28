@@ -60,11 +60,20 @@ export const Message: React.FC = () => {
   };
 
   useEffect(() => {
+    // 自動再生が有効になった場合は現在のセリフをスキップする
     if (!navigation.isAutoPlay) {
       return;
     }
     handleNextLine();
   }, [navigation.isAutoPlay]);
+
+  useEffect(() => {
+    // キャラ名が存在する場合は初期値をセットする
+    if (scenario.currentCharacterIndex === -1) {
+      return;
+    }
+    setCharacterName(scenario.characters[scenario.currentCharacterIndex].name);
+  }, [scenario]);
 
   const memoizedTypewriter = useMemo(
     () => (

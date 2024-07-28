@@ -5,7 +5,7 @@ export default function Document() {
   return (
     <Html lang={CONFIG.LANGUAGE}>
       <Head />
-      <body>
+      <body className="bg-neutral-950">
         <Main />
         <NextScript />
       </body>
