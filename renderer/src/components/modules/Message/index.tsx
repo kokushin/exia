@@ -1,6 +1,7 @@
 import { memo, useMemo, useState, useEffect } from "react";
 import Typewriter from "typewriter-effect";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
+import { configState } from "@/states/configState";
 import { scenarioState } from "@/states/scenarioState";
 import { navigationState } from "@/states/navigationState";
 import { ChevronDoubleDownIcon } from "@heroicons/react/24/solid";
@@ -11,6 +12,7 @@ const AUTO_PLAY_DELAY = 2000; // オート再生時のセリフ送りの間隔(m
 const DISPLAY_LINE_DELAY = 50; // セリフの表示間隔(ms)
 
 export const Message: React.FC = () => {
+  const config = useAtomValue(configState);
   const [scenario, setScenario] = useAtom(scenarioState);
   const [navigation, setNavigation] = useAtom(navigationState);
   const [characterName, setCharacterName] = useState(undefined);
@@ -87,7 +89,7 @@ export const Message: React.FC = () => {
     [scenario.currentLine?.text]
   );
 
-  if (scenario.currentLine === undefined) {
+  if (scenario.currentLine === undefined || !config.isLoaded) {
     return null;
   }
 

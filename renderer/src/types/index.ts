@@ -39,3 +39,7 @@ export type ScenarioLine = {
 export type Navigation = {
   isAutoPlay: boolean;
 };
+
+export type Config = {
+  isLoaded: boolean;
+};
