@@ -1,3 +1,5 @@
+import { SCREEN } from "@/constants";
+
 export type Scenario = {
   id: string;
   bgmFile?: string;
@@ -40,6 +42,10 @@ export type Navigation = {
   isAutoPlay: boolean;
 };
 
-export type Config = {
+export type Config = {};
+
+export type ScreenType = (typeof SCREEN)[keyof typeof SCREEN];
+export type Screen = {
+  screen: ScreenType;
   isLoaded: boolean;
 };
