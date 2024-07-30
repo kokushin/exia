@@ -1,13 +1,22 @@
-import { useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { screenState } from "@/states/screenState";
 import { SCREEN } from "@/constants";
 
 export const StartScreen: React.FC = () => {
-  const setScreenState = useSetAtom(screenState);
+  const [screen, setScreen] = useAtom(screenState);
 
   return (
     <>
-      <button onClick={() => setScreenState(SCREEN.MAIN_SCREEN)}>Start</button>
+      <button
+        onClick={() =>
+          setScreen({
+            ...screen,
+            screen: SCREEN.MAIN_SCREEN,
+          })
+        }
+      >
+        Start
+      </button>
     </>
   );
 };

@@ -4,13 +4,13 @@ import mockScenario from "@/scenarios/S_000.json";
 // TODO: configStateに移す
 import { CONFIG } from "@/constants";
 import { useAtom } from "jotai";
-import { configState } from "@/states/configState";
+import { screenState } from "@/states/screenState";
 
 const FADE_DURATION = 1000; // フェードアウトの再生速度(ms)
 const LOADING_DELAY = 500; // 読み込み完了後の遅延(ms)
 
 export const Loading: React.FC = () => {
-  const [config, setConfig] = useAtom(configState);
+  const [screen, setScreen] = useAtom(screenState);
   const [loadedAssets, setLoadedAssets] = useState(0);
 
   useEffect(() => {
@@ -42,8 +42,8 @@ export const Loading: React.FC = () => {
       await Promise.all(promises);
 
       const timer = setTimeout(() => {
-        setConfig({
-          ...config,
+        setScreen({
+          ...screen,
           isLoaded: true,
         });
         clearTimeout(timer);
@@ -59,9 +59,9 @@ export const Loading: React.FC = () => {
   return (
     <div
       className={`flex justify-center items-center absolute top-0 left-0 z-50 w-full h-full bg-black ${
-        config.isLoaded ? "pointer-events-none" : ""
+        screen.isLoaded ? "pointer-events-none" : ""
       }`}
-      style={{ opacity: config.isLoaded ? 0 : 1, transition: `opacity ${FADE_DURATION}ms ease` }}
+      style={{ opacity: screen.isLoaded ? 0 : 1, transition: `opacity ${FADE_DURATION}ms ease` }}
     >
       <div className="relative w-8 h-8 animate-loading-spin">
         <div className="absolute top-0 left-0 w-4 h-4 rotate-45 before:content-[''] before:w-4 before:h-[2px] before:bg-white before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 after:content-[''] after:w-[2px] after:h-4 after:bg-white after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 animate-loading-effect-odd" />

@@ -9,7 +9,7 @@ import { MainScreen } from "@/components/screens/MainScreen";
 import { EndingScreen } from "@/components/screens/EndingScreen";
 
 const IndexPage = () => {
-  const screen = useAtomValue(screenState);
+  const { screen } = useAtomValue(screenState);
 
   return (
     <Layout>
