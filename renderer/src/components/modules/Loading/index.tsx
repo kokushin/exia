@@ -5,9 +5,12 @@ import mockScenario from "@/scenarios/S_000.json";
 import { CONFIG } from "@/constants";
 import { useAtom } from "jotai";
 import { screenState } from "@/states/screenState";
+import { Scenario } from "@/types";
 
 const FADE_DURATION = 1000; // フェードアウトの再生速度(ms)
 const LOADING_DELAY = 500; // 読み込み完了後の遅延(ms)
+
+const scenario = mockScenario as Scenario;
 
 export const Loading: React.FC = () => {
   const [screen, setScreen] = useAtom(screenState);
@@ -18,15 +21,15 @@ export const Loading: React.FC = () => {
       const allAssets: string[] = [];
 
       // 背景画像のパスをキャッシュ
-      allAssets.push(`./images/backgrounds/${mockScenario.backgroundFile}`);
+      allAssets.push(`./images/backgrounds/${scenario.backgroundFile}`);
 
       // キャラクター画像のパスをキャッシュ
-      mockScenario.characters.forEach((character) => {
+      scenario.characters.forEach((character) => {
         allAssets.push(`./images/characters/${character.imageFile}`);
       });
 
       // CG画像のパスと音声ファイルをキャッシュ
-      mockScenario.lines.forEach((line, index) => {
+      scenario.lines.forEach((line, index) => {
         if (line.character && line.character.imageFile) {
           allAssets.push(`./images/characters/${line.character.imageFile}`);
         }
@@ -34,7 +37,7 @@ export const Loading: React.FC = () => {
           allAssets.push(`./images/cut_ins/${line.cutIn.imageFile}`);
         }
         if (CONFIG.VOICEVOX && line.character && line.text && line.type === 1) {
-          allAssets.push(`./audios/voices/${mockScenario.id}_${index}.wav`);
+          allAssets.push(`./audios/voices/${scenario.id}_${index}.wav`);
         }
       });
 
@@ -114,9 +117,9 @@ const cacheAsset = (src: string, setLoadedAssets: React.Dispatch<React.SetStateA
 const getTotalAssetsCount = (mockScenario, CONFIG) => {
   return (
     1 + // 背景画像
-    mockScenario.characters.length + // キャラクター画像
-    mockScenario.lines.filter((line) => line.character?.imageFile).length + // キャラクター画像
-    mockScenario.lines.filter((line) => line.cutIn?.imageFile).length + // カットイン画像
-    (CONFIG.VOICEVOX ? mockScenario.lines.filter((line) => line.character && line.text && line.type === 1).length : 0) // 音声ファイル
+    scenario.characters.length + // キャラクター画像
+    scenario.lines.filter((line) => line.character?.imageFile).length + // キャラクター画像
+    scenario.lines.filter((line) => line.cutIn?.imageFile).length + // カットイン画像
+    (CONFIG.VOICEVOX ? scenario.lines.filter((line) => line.character && line.text && line.type === 1).length : 0) // 音声ファイル
   );
 };
