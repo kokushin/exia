@@ -113,7 +113,7 @@ export const Message: React.FC = () => {
           style={{ background: "linear-gradient(transparent, #000 100%)" }}
         >
           <div
-            className="absolute top-40 left-0 px-6 md:px-24 flex flex-col gap-4 text-white w-full"
+            className="absolute top-40 left-1/2 -translate-x-1/2 px-6 md:px-24 flex flex-col gap-4 text-white w-full max-w-5xl"
             style={{
               textShadow: "1px 1px 0 rgba(0,0,0,.5)",
             }}
