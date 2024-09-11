@@ -19,9 +19,17 @@ export const Message: React.FC = () => {
   const [characterName, setCharacterName] = useState(undefined);
   const [isShowArrowIcon, setIsShowArrowIcon] = useState(false);
   const [isShowText, setIsShowText] = useState(false);
+  const [isReading, setIsReading] = useState(false);
 
   const handleNextLine = () => {
     setIsShowArrowIcon(false);
+
+    // テキスト送りが途中の場合はスキップ
+    // TODO: 一回画面タップでテキストを即時表示、もう一度タップで次へ進むようにする
+    if (isReading) {
+      return;
+    }
+
     const nextLineIndex = scenario.currentLineIndex + 1;
 
     // シナリオの末尾に到達したら処理をスキップ
@@ -94,6 +102,7 @@ export const Message: React.FC = () => {
         text={scenario.currentLine?.text || ""}
         handleNextLine={handleNextLine}
         setIsShowArrowIcon={setIsShowArrowIcon}
+        setIsReading={setIsReading}
       />
     ),
     [scenario.currentLine?.text]
@@ -155,19 +164,23 @@ const MemoizedTypewriter = memo(
     text,
     handleNextLine,
     setIsShowArrowIcon,
+    setIsReading,
   }: {
     navigation: NavigationType;
     text: string;
     handleNextLine: () => void;
     setIsShowArrowIcon: (isShow: boolean) => void;
+    setIsReading: (isReading: boolean) => void;
   }) => (
     <Typewriter
       key={text}
       onInit={(typewriter) => {
+        setIsReading(true);
         typewriter
           .typeString(text)
           .start()
           .callFunction(() => {
+            setIsReading(false);
             setIsShowArrowIcon(true);
             // オート再生が有効だった場合、セリフ送りを行う
             if (navigation.isAutoPlay) {
