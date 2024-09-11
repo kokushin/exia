@@ -109,11 +109,11 @@ export const Message: React.FC = () => {
       {/* TODO: 定数化する 0=ナレーション, 1=セリフ */}
       {scenario.currentLine.type === 1 ? (
         <div
-          className="absolute bottom-0 left-0 w-full h-80"
+          className="absolute bottom-0 left-0 w-full h-60"
           style={{ background: "linear-gradient(transparent, #000 100%)" }}
         >
           <div
-            className="absolute top-1/2 left-1/2 -translate-y-4 -translate-x-1/2 px-6 md:px-24 flex flex-col gap-4 text-white w-full max-w-6xl"
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 px-6 md:px-24 flex flex-col justify-center gap-4 text-white w-full max-w-5xl h-full"
             style={{
               textShadow: "1px 1px 0 rgba(0,0,0,.5)",
             }}
@@ -124,7 +124,7 @@ export const Message: React.FC = () => {
                 <div className="pl-3">{characterName}</div>
               </div>
             )}
-            {isShowText && <div className={`leading-relaxed`}>{memoizedTypewriter}</div>}
+            <div className="flex leading-relaxed">{isShowText && memoizedTypewriter}&nbsp;</div>
           </div>
           {isShowArrowIcon && !navigation.isAutoPlay && (
             <ChevronDoubleDownIcon className="size-4 text-white absolute bottom-4 right-4 animate-bounce" />
