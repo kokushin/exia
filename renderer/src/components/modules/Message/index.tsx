@@ -1,5 +1,5 @@
-import { memo, useMemo, useState, useEffect, useCallback } from "react";
-import Typewriter from "typewriter-effect";
+import { memo, useMemo, useState, useEffect, useCallback, FC } from "react";
+import Typewriter, { TypewriterClass } from "typewriter-effect";
 import { useAtom, useAtomValue } from "jotai";
 import { screenState } from "@/states/screenState";
 import { scenarioState } from "@/states/scenarioState";
@@ -7,12 +7,71 @@ import { navigationState } from "@/states/navigationState";
 import { ChevronDoubleDownIcon } from "@heroicons/react/24/solid";
 import { Navigation as NavigationType } from "@/types";
 
-// TODO: 設定オブジェクトに移す
-const LOADING_DELAY = 1000; // ローディング後のセリフ表示間隔(ms)
-const AUTO_PLAY_DELAY = 2000; // オート再生時のセリフ送りの間隔(ms)
-const DISPLAY_LINE_DELAY = 50; // セリフの表示間隔(ms)
+// メッセージ表示に関する定数
+const MESSAGE_CONFIG = {
+  LOADING_DELAY: 1000, // ローディング後のセリフ表示間隔(ms)
+  AUTO_PLAY_DELAY: 2000, // オート再生時のセリフ送りの間隔(ms)
+  DISPLAY_LINE_DELAY: 50, // セリフの表示間隔(ms)
+} as const;
 
-export const Message: React.FC = () => {
+// メッセージの種類
+const MESSAGE_TYPE = {
+  NARRATION: 0,
+  DIALOGUE: 1,
+} as const;
+
+// コンポーネントのProps型定義
+type MessageLayoutProps = {
+  characterName?: string;
+  children: React.ReactNode;
+  showArrowIcon: boolean;
+  isAutoPlay: boolean;
+};
+
+// セリフ表示レイアウト
+const DialogueLayout: FC<MessageLayoutProps> = ({ characterName, children, showArrowIcon, isAutoPlay }) => (
+  <div
+    className="absolute bottom-0 left-0 w-full h-60"
+    style={{ background: "linear-gradient(transparent, #000 100%)" }}
+  >
+    <div
+      className="absolute bottom-4 left-1/2 -translate-x-1/2 px-6 md:px-24 flex flex-col justify-center gap-4 text-white w-full max-w-5xl h-full"
+      style={{
+        textShadow: "1px 1px 0 rgba(0,0,0,.5)",
+      }}
+    >
+      {characterName && (
+        <div className="relative">
+          <div className="w-[3px] h-[1em] bg-white absolute top-1/2 left-0 -mt-[0.5em]" />
+          <div className="pl-3">{characterName}</div>
+        </div>
+      )}
+      <div className="flex leading-relaxed">{children}&nbsp;</div>
+    </div>
+    {showArrowIcon && !isAutoPlay && (
+      <ChevronDoubleDownIcon className="size-4 text-white absolute bottom-4 right-4 animate-bounce" />
+    )}
+  </div>
+);
+
+// ナレーション表示レイアウト
+const NarrationLayout: FC<MessageLayoutProps> = ({ children, showArrowIcon, isAutoPlay }) => (
+  <div className="absolute bottom-0 left-0 p-4 w-full text-center">
+    <div
+      className="relative flex flex-col justify-center items-center gap-4 text-white md:text-lg w-full bg-black bg-opacity-80 min-h-24 py-6 px-4 drop-shadow-md"
+      style={{
+        textShadow: "1px 1px 0 rgba(0,0,0,.5)",
+      }}
+    >
+      <div className="leading-relaxed">{children}</div>
+      {showArrowIcon && !isAutoPlay && (
+        <ChevronDoubleDownIcon className="size-4 text-white absolute bottom-2 right-2 animate-bounce" />
+      )}
+    </div>
+  </div>
+);
+
+export const Message: FC = () => {
   const { isLoaded } = useAtomValue(screenState);
   const [scenario, setScenario] = useAtom(scenarioState);
   const [navigation, setNavigation] = useAtom(navigationState);
@@ -21,10 +80,10 @@ export const Message: React.FC = () => {
   const [isShowText, setIsShowText] = useState(false);
   const [isReading, setIsReading] = useState(false);
   const [isAutoPlayStarted, setIsAutoPlayStarted] = useState(false);
-  const [typewriterInstance, setTypewriterInstance] = useState<any>(null);
+  const [typewriterInstance, setTypewriterInstance] = useState<TypewriterClass | null>(null);
 
   // キャラクター情報を更新する関数
-  const updateCharacterInfo = useCallback((nextLine, characters) => {
+  const updateCharacterInfo = useCallback((nextLine: any, characters: any[]) => {
     if (nextLine.character?.imageFile) {
       characters[nextLine.character.index] = {
         ...characters[nextLine.character.index],
@@ -41,6 +100,19 @@ export const Message: React.FC = () => {
     return characters;
   }, []);
 
+  // テキストを全文表示する関数
+  const showFullText = useCallback(() => {
+    if (!navigation.isAutoPlay && typewriterInstance) {
+      typewriterInstance.stop();
+      const textElement = document.querySelector(".Typewriter__wrapper");
+      if (textElement) {
+        textElement.innerHTML = scenario.currentLine?.text || "";
+      }
+      setIsReading(false);
+      setIsShowArrowIcon(true);
+    }
+  }, [navigation.isAutoPlay, typewriterInstance, scenario.currentLine?.text]);
+
   // 次のセリフに進む関数
   const handleNextLine = useCallback(() => {
     // ローディング中は処理をスキップ
@@ -48,17 +120,9 @@ export const Message: React.FC = () => {
 
     setIsShowArrowIcon(false);
 
-    // テキスト送りが途中の場合は、通常モードならテキストを全文表示
+    // テキスト送りが途中の場合は全文表示
     if (isReading) {
-      if (!navigation.isAutoPlay && typewriterInstance) {
-        typewriterInstance.stop();
-        const textElement = document.querySelector(".Typewriter__wrapper");
-        if (textElement) {
-          textElement.innerHTML = scenario.currentLine?.text || "";
-        }
-        setIsReading(false);
-        setIsShowArrowIcon(true);
-      }
+      showFullText();
       return;
     }
 
@@ -85,16 +149,23 @@ export const Message: React.FC = () => {
     });
 
     setCharacterName(nextLine?.character ? scenario.characters[nextLine.character.index].name : undefined);
-  }, [isReading, scenario, navigation, setNavigation, setScenario, updateCharacterInfo]);
+  }, [isReading, scenario, navigation, setNavigation, setScenario, updateCharacterInfo, showFullText]);
 
-  // navigation.isAutoPlayの変更を監視
+  // オート再生の制御
   useEffect(() => {
-    if (navigation.isAutoPlay) {
-      setIsAutoPlayStarted(false); // 初回のAutoとして扱う
-      if (!isReading) {
-        handleNextLine(); // 即座に次の台詞へ
-      }
+    let timer: NodeJS.Timeout | null = null;
+
+    if (navigation.isAutoPlay && !isReading) {
+      timer = setTimeout(() => {
+        handleNextLine();
+      }, MESSAGE_CONFIG.AUTO_PLAY_DELAY);
     }
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
   }, [navigation.isAutoPlay, isReading, handleNextLine]);
 
   // キャラクター名の初期設定
@@ -108,7 +179,7 @@ export const Message: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsShowText(true);
-    }, LOADING_DELAY);
+    }, MESSAGE_CONFIG.LOADING_DELAY);
     return () => clearTimeout(timer);
   }, []);
 
@@ -128,57 +199,32 @@ export const Message: React.FC = () => {
     [scenario.currentLine?.text, navigation, handleNextLine]
   );
 
-  if (scenario.currentLine === undefined || !isLoaded) {
-    return null;
-  }
+  // メッセージ表示コンポーネントの選択
+  const MessageLayout = scenario.currentLine?.type === MESSAGE_TYPE.DIALOGUE ? DialogueLayout : NarrationLayout;
 
-  return (
+  return scenario.currentLine === undefined || !isLoaded ? null : (
     <>
       <div className="absolute top-0 left-0 z-10 w-full h-full" onClick={isLoaded ? handleNextLine : undefined} />
-      {/* TODO: 定数化する 0=ナレーション, 1=セリフ */}
-      {scenario.currentLine.type === 1 ? (
-        <div
-          className="absolute bottom-0 left-0 w-full h-60"
-          style={{ background: "linear-gradient(transparent, #000 100%)" }}
-        >
-          <div
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 px-6 md:px-24 flex flex-col justify-center gap-4 text-white w-full max-w-5xl h-full"
-            style={{
-              textShadow: "1px 1px 0 rgba(0,0,0,.5)",
-            }}
-          >
-            {characterName && (
-              <div className="relative">
-                <div className="w-[3px] h-[1em] bg-white absolute top-1/2 left-0 -mt-[0.5em]" />
-                <div className="pl-3">{characterName}</div>
-              </div>
-            )}
-            <div className="flex leading-relaxed">{isShowText && memoizedTypewriter}&nbsp;</div>
-          </div>
-          {isShowArrowIcon && !navigation.isAutoPlay && (
-            <ChevronDoubleDownIcon className="size-4 text-white absolute bottom-4 right-4 animate-bounce" />
-          )}
-        </div>
-      ) : (
-        <div className="absolute bottom-0 left-0 p-4 w-full text-center">
-          <div
-            className="relative flex flex-col justify-center items-center gap-4 text-white md:text-lg w-full bg-black bg-opacity-80 min-h-24 py-6 px-4 drop-shadow-md"
-            style={{
-              textShadow: "1px 1px 0 rgba(0,0,0,.5)",
-            }}
-          >
-            {isShowText && <div className={`leading-relaxed`}>{memoizedTypewriter}</div>}
-            {isShowArrowIcon && !navigation.isAutoPlay && (
-              <ChevronDoubleDownIcon className="size-4 text-white absolute bottom-2 right-2 animate-bounce" />
-            )}
-          </div>
-        </div>
-      )}
+      <MessageLayout characterName={characterName} showArrowIcon={isShowArrowIcon} isAutoPlay={navigation.isAutoPlay}>
+        {isShowText && memoizedTypewriter}
+      </MessageLayout>
     </>
   );
 };
 
-const MemoizedTypewriter = memo(
+// Typewriterコンポーネントのprops型定義
+type TypewriterProps = {
+  navigation: NavigationType;
+  text: string;
+  handleNextLine: () => void;
+  setIsShowArrowIcon: (isShow: boolean) => void;
+  setIsReading: (isReading: boolean) => void;
+  isAutoPlayStarted: boolean;
+  setIsAutoPlayStarted: (isStarted: boolean) => void;
+  setTypewriterInstance: (instance: TypewriterClass | null) => void;
+};
+
+const MemoizedTypewriter = memo<TypewriterProps>(
   ({
     navigation,
     text,
@@ -188,15 +234,6 @@ const MemoizedTypewriter = memo(
     isAutoPlayStarted,
     setIsAutoPlayStarted,
     setTypewriterInstance,
-  }: {
-    navigation: NavigationType;
-    text: string;
-    handleNextLine: () => void;
-    setIsShowArrowIcon: (isShow: boolean) => void;
-    setIsReading: (isReading: boolean) => void;
-    isAutoPlayStarted: boolean;
-    setIsAutoPlayStarted: (isStarted: boolean) => void;
-    setTypewriterInstance: (instance: any) => void;
   }) => (
     <Typewriter
       key={text}
@@ -208,17 +245,10 @@ const MemoizedTypewriter = memo(
           .callFunction(() => {
             setIsShowArrowIcon(true);
             setIsReading(false);
-            // オート再生が有効な場合のみ待機時間を設ける
-            if (navigation.isAutoPlay) {
-              setIsAutoPlayStarted(true);
-              setTimeout(() => {
-                handleNextLine();
-              }, AUTO_PLAY_DELAY);
-            }
           })
           .start();
       }}
-      options={{ delay: DISPLAY_LINE_DELAY }}
+      options={{ delay: MESSAGE_CONFIG.DISPLAY_LINE_DELAY }}
     />
   )
 );
