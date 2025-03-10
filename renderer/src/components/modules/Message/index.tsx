@@ -21,6 +21,7 @@ export const Message: React.FC = () => {
   const [isShowText, setIsShowText] = useState(false);
   const [isReading, setIsReading] = useState(false);
   const [isAutoPlayStarted, setIsAutoPlayStarted] = useState(false);
+  const [typewriterInstance, setTypewriterInstance] = useState<any>(null);
 
   // キャラクター情報を更新する関数
   const updateCharacterInfo = useCallback((nextLine, characters) => {
@@ -42,10 +43,22 @@ export const Message: React.FC = () => {
 
   // 次のセリフに進む関数
   const handleNextLine = useCallback(() => {
+    // ローディング中は処理をスキップ
+    if (!isLoaded) return;
+
     setIsShowArrowIcon(false);
 
-    // テキスト送りが途中の場合はスキップ
+    // テキスト送りが途中の場合は、通常モードならテキストを全文表示
     if (isReading) {
+      if (!navigation.isAutoPlay && typewriterInstance) {
+        typewriterInstance.stop();
+        const textElement = document.querySelector(".Typewriter__wrapper");
+        if (textElement) {
+          textElement.innerHTML = scenario.currentLine?.text || "";
+        }
+        setIsReading(false);
+        setIsShowArrowIcon(true);
+      }
       return;
     }
 
@@ -109,6 +122,7 @@ export const Message: React.FC = () => {
         setIsReading={setIsReading}
         isAutoPlayStarted={isAutoPlayStarted}
         setIsAutoPlayStarted={setIsAutoPlayStarted}
+        setTypewriterInstance={setTypewriterInstance}
       />
     ),
     [scenario.currentLine?.text, navigation, handleNextLine]
@@ -120,7 +134,7 @@ export const Message: React.FC = () => {
 
   return (
     <>
-      <div className="absolute top-0 left-0 z-10 w-full h-full" onClick={handleNextLine} />
+      <div className="absolute top-0 left-0 z-10 w-full h-full" onClick={isLoaded ? handleNextLine : undefined} />
       {/* TODO: 定数化する 0=ナレーション, 1=セリフ */}
       {scenario.currentLine.type === 1 ? (
         <div
@@ -173,6 +187,7 @@ const MemoizedTypewriter = memo(
     setIsReading,
     isAutoPlayStarted,
     setIsAutoPlayStarted,
+    setTypewriterInstance,
   }: {
     navigation: NavigationType;
     text: string;
@@ -181,11 +196,13 @@ const MemoizedTypewriter = memo(
     setIsReading: (isReading: boolean) => void;
     isAutoPlayStarted: boolean;
     setIsAutoPlayStarted: (isStarted: boolean) => void;
+    setTypewriterInstance: (instance: any) => void;
   }) => (
     <Typewriter
       key={text}
       onInit={(typewriter) => {
         setIsReading(true);
+        setTypewriterInstance(typewriter);
         typewriter
           .typeString(text)
           .callFunction(() => {
