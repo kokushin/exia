@@ -12,19 +12,27 @@ export const CutIn: React.FC = () => {
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
-    if (scenario.currentLine?.cutIn?.imageFile) {
+    let timer: NodeJS.Timeout;
+
+    const currentCutIn = scenario.currentLine?.cutIn;
+    if (currentCutIn?.imageFile) {
       setIsShow(true);
-      setImageFile(scenario.currentLine.cutIn.imageFile);
-      setIsFullScreen(Boolean(scenario.currentLine.cutIn.isFullScreen));
+      setImageFile(currentCutIn.imageFile);
+      setIsFullScreen(Boolean(currentCutIn.isFullScreen));
     } else if (isShow) {
       setIsShow(false);
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setImageFile(undefined);
         setIsFullScreen(false);
-        clearTimeout(timer);
       }, FADE_DURATION);
     }
-  }, [scenario, isShow]);
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [scenario.currentLine?.cutIn]);
 
   return (
     <div
