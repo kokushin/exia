@@ -1,62 +1,121 @@
-import { useState, useEffect } from "react";
-// TODO: isFetched が true になったら scenario を参照するように修正
-import mockScenario from "@/scenarios/S_000.json";
-// TODO: configStateに移す
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { CONFIG } from "@/constants";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { screenState } from "@/states/screenState";
+import { scenarioState } from "@/states/scenarioState";
 import { Scenario } from "@/types";
 
 const FADE_DURATION = 1000; // フェードアウトの再生速度(ms)
 const LOADING_DELAY = 500; // 読み込み完了後の遅延(ms)
 
-const scenario = mockScenario as Scenario;
-
 export const Loading: React.FC = () => {
   const [screen, setScreen] = useAtom(screenState);
   const [loadedAssets, setLoadedAssets] = useState(0);
 
-  useEffect(() => {
-    const cacheAssets = async () => {
-      const allAssets: string[] = [];
+  const scenario = useAtomValue(scenarioState);
 
-      // 背景画像のパスをキャッシュ
-      allAssets.push(`./images/backgrounds/${scenario.backgroundFile}`);
+  // アセットリストの生成をメモ化
+  const allAssets = useMemo(() => {
+    if (!scenario.isFetched) return [];
 
-      // キャラクター画像のパスをキャッシュ
-      scenario.characters.forEach((character) => {
-        allAssets.push(`./images/characters/${character.imageFile}`);
-      });
+    const assets: string[] = [];
 
-      // CG画像のパスと音声ファイルをキャッシュ
-      scenario.lines.forEach((line, index) => {
-        if (line.character && line.character.imageFile) {
-          allAssets.push(`./images/characters/${line.character.imageFile}`);
-        }
-        if (line.cutIn && line.cutIn.imageFile) {
-          allAssets.push(`./images/cut_ins/${line.cutIn.imageFile}`);
-        }
-        if (CONFIG.VOICEVOX && line.character && line.text && line.type === 1) {
-          allAssets.push(`./audios/voices/${scenario.id}_${index}.wav`);
-        }
-      });
+    // 背景画像のパスをキャッシュ
+    if (scenario.backgroundFile) {
+      assets.push(`./images/backgrounds/${scenario.backgroundFile}`);
+    }
 
-      const promises = allAssets.map((src) => cacheAsset(src, setLoadedAssets));
-      await Promise.all(promises);
+    // キャラクター画像のパスをキャッシュ
+    scenario.characters?.forEach((character) => {
+      assets.push(`./images/characters/${character.imageFile}`);
+    });
 
-      const timer = setTimeout(() => {
-        setScreen({
-          ...screen,
-          isLoaded: true,
+    // CG画像のパスと音声ファイルをキャッシュ
+    scenario.lines.forEach((line, index) => {
+      if (line.character?.imageFile) {
+        assets.push(`./images/characters/${line.character.imageFile}`);
+      }
+      if (line.cutIn?.imageFile) {
+        assets.push(`./images/cut_ins/${line.cutIn.imageFile}`);
+      }
+      if (CONFIG.VOICEVOX && line.character && line.text && line.type === 1) {
+        assets.push(`./audios/voices/${scenario.id}_${index}.wav`);
+      }
+    });
+
+    return assets;
+  }, [scenario]);
+
+  // アセットの総数をメモ化
+  const totalAssets = useMemo(() => allAssets.length, [allAssets]);
+
+  // アセットのキャッシュ処理を最適化
+  const cacheAsset = useCallback(async (src: string) => {
+    try {
+      if (src.endsWith(".wav")) {
+        const audio = new Audio();
+        await new Promise<void>((resolve, reject) => {
+          audio.onloadeddata = () => {
+            setLoadedAssets((prev) => prev + 1);
+            resolve();
+          };
+          audio.onerror = () => {
+            console.warn(`File not found: ${src}`);
+            resolve();
+          };
+          audio.src = src;
         });
-        clearTimeout(timer);
-      }, LOADING_DELAY);
+      } else {
+        const img = new Image();
+        await new Promise<void>((resolve, reject) => {
+          img.onload = () => {
+            setLoadedAssets((prev) => prev + 1);
+            resolve();
+          };
+          img.onerror = () => {
+            console.warn(`Failed to load image: ${src}`);
+            resolve();
+          };
+          img.src = src;
+        });
+      }
+    } catch (error) {
+      console.error(`Failed to cache asset: ${src}`, error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!scenario.isFetched || allAssets.length === 0) return;
+
+    let mounted = true;
+    let loadingTimer: NodeJS.Timeout;
+
+    const loadAssets = async () => {
+      try {
+        await Promise.all(allAssets.map(cacheAsset));
+
+        if (mounted) {
+          loadingTimer = setTimeout(() => {
+            setScreen((prev) => ({
+              ...prev,
+              isLoaded: true,
+            }));
+          }, LOADING_DELAY);
+        }
+      } catch (error) {
+        console.error("Failed to load assets:", error);
+      }
     };
 
-    cacheAssets();
-  }, [mockScenario]);
+    loadAssets();
 
-  const totalAssets = getTotalAssetsCount(mockScenario, CONFIG);
+    return () => {
+      mounted = false;
+      if (loadingTimer) {
+        clearTimeout(loadingTimer);
+      }
+    };
+  }, [allAssets, cacheAsset, scenario.isFetched]);
   const progress = Math.round((loadedAssets / totalAssets) * 100);
 
   return (
@@ -82,44 +141,5 @@ export const Loading: React.FC = () => {
         </div>
       </div>
     </div>
-  );
-};
-
-const cacheAsset = (src: string, setLoadedAssets: React.Dispatch<React.SetStateAction<number>>) => {
-  return new Promise<void>((resolve) => {
-    if (src.endsWith(".wav")) {
-      const audio = new Audio();
-      audio.src = src;
-      audio.onloadeddata = () => {
-        setLoadedAssets((prev) => prev + 1);
-        resolve();
-      };
-      audio.onerror = () => {
-        // wavファイルが見つからない場合はスキップ
-        console.warn(`File not found: ${src}`);
-        resolve();
-      };
-    } else {
-      const img = new Image();
-      img.src = src;
-      img.onload = () => {
-        setLoadedAssets((prev) => prev + 1);
-        resolve();
-      };
-      img.onerror = () => {
-        console.warn(`Failed to load image: ${src}`);
-        resolve();
-      };
-    }
-  });
-};
-
-const getTotalAssetsCount = (mockScenario, CONFIG) => {
-  return (
-    1 + // 背景画像
-    scenario.characters.length + // キャラクター画像
-    scenario.lines.filter((line) => line.character?.imageFile).length + // キャラクター画像
-    scenario.lines.filter((line) => line.cutIn?.imageFile).length + // カットイン画像
-    (CONFIG.VOICEVOX ? scenario.lines.filter((line) => line.character && line.text && line.type === 1).length : 0) // 音声ファイル
   );
 };

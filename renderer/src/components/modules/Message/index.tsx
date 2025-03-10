@@ -1,4 +1,4 @@
-import { memo, useMemo, useState, useEffect } from "react";
+import { memo, useMemo, useState, useEffect, useCallback } from "react";
 import Typewriter from "typewriter-effect";
 import { useAtom, useAtomValue } from "jotai";
 import { screenState } from "@/states/screenState";
@@ -20,12 +20,31 @@ export const Message: React.FC = () => {
   const [isShowArrowIcon, setIsShowArrowIcon] = useState(false);
   const [isShowText, setIsShowText] = useState(false);
   const [isReading, setIsReading] = useState(false);
+  const [isAutoPlayStarted, setIsAutoPlayStarted] = useState(false);
 
-  const handleNextLine = () => {
+  // キャラクター情報を更新する関数
+  const updateCharacterInfo = useCallback((nextLine, characters) => {
+    if (nextLine.character?.imageFile) {
+      characters[nextLine.character.index] = {
+        ...characters[nextLine.character.index],
+        imageFile: nextLine.character.imageFile,
+      };
+    }
+
+    if (nextLine.character?.animation) {
+      characters[nextLine.character.index] = {
+        ...characters[nextLine.character.index],
+        animation: nextLine.character.animation,
+      };
+    }
+    return characters;
+  }, []);
+
+  // 次のセリフに進む関数
+  const handleNextLine = useCallback(() => {
     setIsShowArrowIcon(false);
 
     // テキスト送りが途中の場合はスキップ
-    // TODO: 一回画面タップでテキストを即時表示、もう一度タップで次へ進むようにする
     if (isReading) {
       return;
     }
@@ -42,57 +61,42 @@ export const Message: React.FC = () => {
     }
 
     const nextLine = scenario.lines[nextLineIndex];
-    const characters = [...scenario.characters];
-
-    // セリフにキャラクター画像が指定されている場合、上書きする
-    if (nextLine.character && nextLine.character?.imageFile) {
-      characters[nextLine.character.index] = {
-        ...characters[nextLine.character.index],
-        imageFile: nextLine.character.imageFile,
-      };
-    }
-
-    // セリフにアニメーションが指定されている場合、上書きする
-    if (nextLine.character && nextLine.character?.animation) {
-      characters[nextLine.character.index] = {
-        ...characters[nextLine.character.index],
-        animation: nextLine.character.animation,
-      };
-    }
+    const updatedCharacters = updateCharacterInfo(nextLine, [...scenario.characters]);
 
     setScenario({
       ...scenario,
       currentLineIndex: nextLineIndex,
       currentLine: nextLine,
       currentCharacterIndex: nextLine.character !== undefined ? nextLine.character.index : -1,
-      characters: characters,
+      characters: updatedCharacters,
     });
 
     setCharacterName(nextLine?.character ? scenario.characters[nextLine.character.index].name : undefined);
-  };
+  }, [isReading, scenario, navigation, setNavigation, setScenario, updateCharacterInfo]);
 
+  // navigation.isAutoPlayの変更を監視
   useEffect(() => {
-    // 自動再生が有効になった場合は現在のセリフをスキップする
-    if (!navigation.isAutoPlay) {
-      return;
+    if (navigation.isAutoPlay) {
+      setIsAutoPlayStarted(false); // 初回のAutoとして扱う
+      if (!isReading) {
+        handleNextLine(); // 即座に次の台詞へ
+      }
     }
-    handleNextLine();
-  }, [navigation.isAutoPlay]);
+  }, [navigation.isAutoPlay, isReading, handleNextLine]);
 
+  // キャラクター名の初期設定
   useEffect(() => {
-    // キャラ名が存在する場合は初期値をセットする
-    if (scenario.currentCharacterIndex === -1) {
-      return;
+    if (scenario.currentCharacterIndex !== -1) {
+      setCharacterName(scenario.characters[scenario.currentCharacterIndex].name);
     }
-    setCharacterName(scenario.characters[scenario.currentCharacterIndex].name);
-  }, [scenario]);
+  }, [scenario.currentCharacterIndex, scenario.characters]);
 
+  // ローディング後のセリフ表示
   useEffect(() => {
-    // ローディング後のセリフ表示を遅延する
     const timer = setTimeout(() => {
       setIsShowText(true);
-      clearTimeout(timer);
     }, LOADING_DELAY);
+    return () => clearTimeout(timer);
   }, []);
 
   const memoizedTypewriter = useMemo(
@@ -103,9 +107,11 @@ export const Message: React.FC = () => {
         handleNextLine={handleNextLine}
         setIsShowArrowIcon={setIsShowArrowIcon}
         setIsReading={setIsReading}
+        isAutoPlayStarted={isAutoPlayStarted}
+        setIsAutoPlayStarted={setIsAutoPlayStarted}
       />
     ),
-    [scenario.currentLine?.text]
+    [scenario.currentLine?.text, navigation, handleNextLine]
   );
 
   if (scenario.currentLine === undefined || !isLoaded) {
@@ -165,12 +171,16 @@ const MemoizedTypewriter = memo(
     handleNextLine,
     setIsShowArrowIcon,
     setIsReading,
+    isAutoPlayStarted,
+    setIsAutoPlayStarted,
   }: {
     navigation: NavigationType;
     text: string;
     handleNextLine: () => void;
     setIsShowArrowIcon: (isShow: boolean) => void;
     setIsReading: (isReading: boolean) => void;
+    isAutoPlayStarted: boolean;
+    setIsAutoPlayStarted: (isStarted: boolean) => void;
   }) => (
     <Typewriter
       key={text}
@@ -178,18 +188,18 @@ const MemoizedTypewriter = memo(
         setIsReading(true);
         typewriter
           .typeString(text)
-          .start()
           .callFunction(() => {
-            setIsReading(false);
             setIsShowArrowIcon(true);
-            // オート再生が有効だった場合、セリフ送りを行う
+            setIsReading(false);
+            // オート再生が有効な場合のみ待機時間を設ける
             if (navigation.isAutoPlay) {
-              const timer = setTimeout(() => {
+              setIsAutoPlayStarted(true);
+              setTimeout(() => {
                 handleNextLine();
-                clearTimeout(timer);
               }, AUTO_PLAY_DELAY);
             }
-          });
+          })
+          .start();
       }}
       options={{ delay: DISPLAY_LINE_DELAY }}
     />

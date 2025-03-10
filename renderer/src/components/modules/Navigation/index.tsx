@@ -1,25 +1,35 @@
 import { useAtom } from "jotai";
+import { useCallback, useMemo } from "react";
 import { navigationState } from "@/states/navigationState";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
+
+type NavigationItem = {
+  label: string;
+  action?: () => void;
+};
 
 export const Navigation: React.FC = () => {
   const [navigation, setNavigation] = useAtom(navigationState);
 
-  const items = [
-    { label: "SAVE", action: undefined },
-    { label: "LOAD", action: undefined },
-    { label: "AUTO", action: () => handleAutoPlay() },
-    { label: "SKIP", action: undefined },
-    { label: "LOG", action: undefined },
-    { label: "CONFIG", action: undefined },
-  ];
-
-  const handleAutoPlay = () => {
+  const handleAutoPlay = useCallback(() => {
     setNavigation({
       ...navigation,
       isAutoPlay: !navigation.isAutoPlay,
     });
-  };
+  }, [navigation, setNavigation]);
+
+  // ナビゲーションアイテムをメモ化
+  const items = useMemo<NavigationItem[]>(
+    () => [
+      { label: "SAVE" },
+      { label: "LOAD" },
+      { label: "AUTO", action: handleAutoPlay },
+      { label: "SKIP" },
+      { label: "LOG" },
+      { label: "CONFIG" },
+    ],
+    [handleAutoPlay]
+  );
 
   return (
     <nav className="absolute top-0 right-0 z-20 flex items-center gap-4 text-white text-sm p-4">
