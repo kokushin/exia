@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useAtom } from "jotai";
 import { scenarioState } from "@/states/scenarioState";
 import { getCurrentCharacterIndex } from "@/utils";
