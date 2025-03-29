@@ -10,7 +10,7 @@
   "main": "main/index.js",
   "scripts": {
     "clean": "rimraf dist main renderer/out renderer/.next",
-    "dev": "concurrently \"npm run dev:electron\" \"npm run dev:editor\" \"npm run open:editor\"",
+    "dev": "concurrently \"npm run dev:electron\" \"npm run dev:editor\"",
     "dev:electron": "npm run build-electron && electron .",
     "dev:editor": "cd editor && npm run dev",
     "open:editor": "sleep 3 && open http://localhost:3001",
