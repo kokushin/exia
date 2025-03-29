@@ -35,7 +35,13 @@ export const Navigation: React.FC = () => {
     <nav className="absolute top-0 right-0 z-20 flex items-center gap-4 text-white text-sm p-4">
       {items.map((item, i) => (
         <button
-          onClick={item.action}
+          onClick={() => {
+            if (item.action) {
+              item.action();
+            } else {
+              window.alert("まだ未実装です😭");
+            }
+          }}
           key={i}
           className="relative"
           style={{

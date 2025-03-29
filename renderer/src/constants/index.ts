@@ -2,6 +2,7 @@ export const CONFIG = {
   TITLE: "Exia - Novel game engine",
   LANGUAGE: "ja",
   VOICEVOX: false,
+  DEBUG: false,
 };
 
 export const SCREEN = {
