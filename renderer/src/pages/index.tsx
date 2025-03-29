@@ -1,7 +1,7 @@
 import React from "react";
 import { useAtomValue } from "jotai";
 import { screenState } from "@/states/screenState";
-import { SCREEN } from "@/constants";
+import { SCREEN, CONFIG } from "@/constants";
 import { Layout } from "@/components/Layout";
 import { DebugMenu } from "@/components/DebugMenu";
 import { StartScreen } from "@/components/screens/StartScreen";
@@ -16,7 +16,7 @@ const IndexPage = () => {
       {screen === SCREEN.START_SCREEN && <StartScreen />}
       {screen === SCREEN.MAIN_SCREEN && <MainScreen />}
       {screen === SCREEN.ENDING_SCREEN && <EndingScreen />}
-      <DebugMenu />
+      {CONFIG.DEBUG && <DebugMenu />}
     </Layout>
   );
 };
