@@ -99,7 +99,7 @@ const ScenarioEditor: React.FC = () => {
     <div className="min-h-screen bg-gray-900 text-white p-4">
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">シナリオエディター</h1>
+          <h1 className="text-2xl font-bold">シナリオエディター (beta)</h1>
           <button onClick={handleSave} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded">
             保存
           </button>

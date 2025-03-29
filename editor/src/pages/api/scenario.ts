@@ -3,7 +3,7 @@ import fs from "fs/promises";
 import path from "path";
 
 // シナリオファイルのパス
-const SCENARIO_PATH = "/Users/kokushing/Repository/exia/renderer/src/scenarios/S_000.json";
+const SCENARIO_PATH = path.join(process.cwd(), "../renderer/src/scenarios/S_000.json");
 
 // デバッグ用
 console.log("SCENARIO_PATH:", SCENARIO_PATH);
