@@ -26,7 +26,8 @@ export const Navigation: React.FC = () => {
       { label: "AUTO", action: handleAutoPlay },
       { label: "SKIP" },
       { label: "LOG" },
-      { label: "CONFIG" },
+      { label: "GITHUB", action: () => window.open("https://github.com/kokushin/exia") },
+      // { label: "CONFIG" },
     ],
     [handleAutoPlay]
   );
