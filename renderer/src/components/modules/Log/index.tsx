@@ -4,12 +4,7 @@ import { navigationState } from "@/states/navigationState";
 import { scenarioState } from "@/states/scenarioState";
 import { ScenarioLine, ScenarioCharacter } from "@/types";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-
-// メッセージの種類
-const MESSAGE_TYPE = {
-  NARRATION: 0,
-  DIALOGUE: 1,
-} as const;
+import { MESSAGE_TYPE } from "@/constants";
 
 export const Log: React.FC = () => {
   const [navigation, setNavigation] = useAtom(navigationState);
