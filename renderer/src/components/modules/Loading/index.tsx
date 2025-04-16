@@ -1,9 +1,8 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { CONFIG } from "@/constants";
 import { useAtom, useAtomValue } from "jotai";
 import { screenState } from "@/states/screenState";
 import { scenarioState } from "@/states/scenarioState";
-import { Scenario } from "@/types";
 
 const FADE_DURATION = 1000; // フェードアウトの再生速度(ms)
 const LOADING_DELAY = 500; // 読み込み完了後の遅延(ms)
@@ -11,7 +10,8 @@ const LOADING_DELAY = 500; // 読み込み完了後の遅延(ms)
 export const Loading: React.FC = () => {
   const [screen, setScreen] = useAtom(screenState);
   const [loadedAssets, setLoadedAssets] = useState(0);
-
+  const loadedAssetsRef = useRef(new Set<string>()); // 既にロードされたアセットを追跡
+  
   const scenario = useAtomValue(scenarioState);
 
   // アセットリストの生成をメモ化
@@ -43,24 +43,35 @@ export const Loading: React.FC = () => {
       }
     });
 
-    return assets;
+    // 重複を排除
+    return [...new Set(assets)];
   }, [scenario]);
 
   // アセットの総数をメモ化
   const totalAssets = useMemo(() => allAssets.length, [allAssets]);
 
   // アセットのキャッシュ処理を最適化
-  const cacheAsset = useCallback(async (src: string) => {
+  const cacheAsset = useRef(async (src: string) => {
+    // 既にロード済みのアセットは処理しない
+    if (loadedAssetsRef.current.has(src)) return;
+    
     try {
       if (src.endsWith(".wav")) {
         const audio = new Audio();
         await new Promise<void>((resolve, reject) => {
           audio.onloadeddata = () => {
-            setLoadedAssets((prev) => prev + 1);
+            if (!loadedAssetsRef.current.has(src)) {
+              loadedAssetsRef.current.add(src);
+              setLoadedAssets(prev => prev + 1);
+            }
             resolve();
           };
           audio.onerror = () => {
             console.warn(`File not found: ${src}`);
+            if (!loadedAssetsRef.current.has(src)) {
+              loadedAssetsRef.current.add(src);
+              setLoadedAssets(prev => prev + 1);
+            }
             resolve();
           };
           audio.src = src;
@@ -69,11 +80,18 @@ export const Loading: React.FC = () => {
         const img = new Image();
         await new Promise<void>((resolve, reject) => {
           img.onload = () => {
-            setLoadedAssets((prev) => prev + 1);
+            if (!loadedAssetsRef.current.has(src)) {
+              loadedAssetsRef.current.add(src);
+              setLoadedAssets(prev => prev + 1);
+            }
             resolve();
           };
           img.onerror = () => {
             console.warn(`Failed to load image: ${src}`);
+            if (!loadedAssetsRef.current.has(src)) {
+              loadedAssetsRef.current.add(src);
+              setLoadedAssets(prev => prev + 1);
+            }
             resolve();
           };
           img.src = src;
@@ -81,20 +99,31 @@ export const Loading: React.FC = () => {
       }
     } catch (error) {
       console.error(`Failed to cache asset: ${src}`, error);
+      // エラーが発生しても、ロード完了としてカウント
+      if (!loadedAssetsRef.current.has(src)) {
+        loadedAssetsRef.current.add(src);
+        setLoadedAssets(prev => prev + 1);
+      }
     }
-  }, []);
+  }).current;
 
   useEffect(() => {
     if (!scenario.isFetched || allAssets.length === 0) return;
 
+    // 初期化
+    setLoadedAssets(0);
+    loadedAssetsRef.current = new Set();
+    
     let mounted = true;
-    let loadingTimer: NodeJS.Timeout;
+    let loadingTimer: NodeJS.Timeout | undefined;
 
     const loadAssets = async () => {
       try {
+        // 並列ロードを行うが、各アセットは一度だけカウント
         await Promise.all(allAssets.map(cacheAsset));
 
-        if (mounted) {
+        // すべてのアセットがロードされたことを確認
+        if (mounted && loadedAssetsRef.current.size >= totalAssets) {
           loadingTimer = setTimeout(() => {
             setScreen((prev) => ({
               ...prev,
@@ -115,8 +144,10 @@ export const Loading: React.FC = () => {
         clearTimeout(loadingTimer);
       }
     };
-  }, [allAssets, cacheAsset, scenario.isFetched]);
-  const progress = Math.round((loadedAssets / totalAssets) * 100);
+  }, [allAssets, totalAssets, scenario.isFetched, setScreen]);
+
+  // 正確な進捗率計算のために、ロード完了したアセットと全アセット数を比較
+  const progress = totalAssets > 0 ? Math.min(Math.round((loadedAssets / totalAssets) * 100), 100) : 0;
 
   return (
     <div
