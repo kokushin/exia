@@ -126,6 +126,7 @@ export const Message: FC = () => {
       return;
     }
 
+    // 次の行のインデックスを計算
     const nextLineIndex = scenario.currentLineIndex + 1;
 
     // シナリオの末尾に到達したら処理をスキップ
@@ -137,19 +138,74 @@ export const Message: FC = () => {
       return;
     }
 
+    // 現在のラインをログに追加してから次のラインに進む
     const nextLine = scenario.lines[nextLineIndex];
     const updatedCharacters = updateCharacterInfo(nextLine, [...scenario.characters]);
+    
+    // 現在表示中のメッセージをログに追加
+    const updatedLogs = [...scenario.logs];
+    const currentLine = scenario.currentLine;
+    
+    if (currentLine) {
+      // 重複チェック
+      const isAlreadyLogged = updatedLogs.some(log => log.text === currentLine.text);
+      
+      if (!isAlreadyLogged) {
+        // 現在の行に関連するキャラクター情報を取得
+        let characterInfo = undefined;
+        if (currentLine.character && currentLine.character.index !== undefined) {
+          const character = scenario.characters[currentLine.character.index];
+          if (character) {
+            characterInfo = {
+              index: currentLine.character.index,
+              name: character.name,
+              imageFile: character.imageFile,
+            };
+          }
+        }
 
-    setScenario({
-      ...scenario,
+        // キャラクター情報を含めてログに追加
+        updatedLogs.push({
+          ...currentLine,
+          character: characterInfo,
+        });
+      }
+    }
+
+    // シナリオの状態を更新（ログの更新と次の行への進行を同時に行う）
+    setScenario(prevState => ({
+      ...prevState,
       currentLineIndex: nextLineIndex,
       currentLine: nextLine,
       currentCharacterIndex: nextLine.character !== undefined ? nextLine.character.index : -1,
       characters: updatedCharacters,
-    });
+      logs: updatedLogs,
+    }));
 
     setCharacterName(nextLine?.character ? scenario.characters[nextLine.character.index].name : undefined);
-  }, [isReading, scenario, navigation, setNavigation, setScenario, updateCharacterInfo, showFullText]);
+  }, [isReading, scenario, navigation, setNavigation, setScenario, updateCharacterInfo, showFullText, isLoaded]);
+
+  // 初期のシナリオをログに追加（一度だけ実行される）
+  useEffect(() => {
+    if (scenario.currentLine && scenario.logs.length === 0 && isLoaded) {
+      // 最初のメッセージを表示したときにログに追加
+      const characterInfo = scenario.currentLine.character && scenario.currentLine.character.index !== undefined 
+        ? {
+            index: scenario.currentLine.character.index,
+            name: scenario.characters[scenario.currentLine.character.index].name,
+            imageFile: scenario.characters[scenario.currentLine.character.index].imageFile,
+          } 
+        : undefined;
+
+      setScenario(prevState => ({
+        ...prevState,
+        logs: [{
+          ...scenario.currentLine,
+          character: characterInfo,
+        }]
+      }));
+    }
+  }, [scenario.currentLine, scenario.logs.length, isLoaded, setScenario, scenario.characters]);
 
   // オート再生の制御
   useEffect(() => {

@@ -40,6 +40,7 @@ export type ScenarioLine = {
 
 export type Navigation = {
   isAutoPlay: boolean;
+  isLogOpen: boolean;
 };
 
 export type Config = {};

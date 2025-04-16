@@ -18,6 +18,13 @@ export const Navigation: React.FC = () => {
     });
   }, [navigation, setNavigation]);
 
+  const handleLogOpen = useCallback(() => {
+    setNavigation({
+      ...navigation,
+      isLogOpen: true,
+    });
+  }, [navigation, setNavigation]);
+
   // ナビゲーションアイテムをメモ化
   const items = useMemo<NavigationItem[]>(
     () => [
@@ -25,11 +32,11 @@ export const Navigation: React.FC = () => {
       { label: "LOAD" },
       { label: "AUTO", action: handleAutoPlay },
       { label: "SKIP" },
-      { label: "LOG" },
+      { label: "LOG", action: handleLogOpen },
       { label: "GITHUB", action: () => window.open("https://github.com/kokushin/exia") },
       // { label: "CONFIG" },
     ],
-    [handleAutoPlay]
+    [handleAutoPlay, handleLogOpen]
   );
 
   return (

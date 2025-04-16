@@ -11,6 +11,7 @@ import { Character } from "@/components/modules/Character";
 import { Navigation } from "@/components/modules/Navigation";
 import { Loading } from "@/components/modules/Loading";
 import { Voice } from "@/components/modules/Voice";
+import { Log } from "@/components/modules/Log";
 
 export const MainScreen: React.FC = () => {
   const [scenario, setScenario] = useAtom(scenarioState);
@@ -48,6 +49,7 @@ export const MainScreen: React.FC = () => {
       <CutIn />
       <Message />
       <Navigation />
+      <Log />
       <Loading />
     </>
   );
