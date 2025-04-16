@@ -1,3 +1,67 @@
 .Typewriter__cursor {
   display: none !important;
 }
+
+/* バックログのカスタムスタイル */
+.backlog-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.backlog-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.backlog-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(200, 200, 200, 0.3);
+  border-radius: 20px;
+}
+
+.backlog-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(200, 200, 200, 0.5);
+}
+
+/* バックログヘッダーの装飾 */
+.backlog-header-decoration {
+  background-image: linear-gradient(to right, transparent, rgba(200, 200, 200, 0.2), transparent);
+}
+
+.backlog-header-divider {
+  background-image: linear-gradient(to right, transparent, rgba(200, 200, 200, 0.5), transparent);
+}
+
+.backlog-diamond {
+  background-color: rgba(200, 200, 200, 0.7);
+}
+
+/* バックログの区切り線 */
+.backlog-divider-line {
+  background-color: rgba(200, 200, 200, 0.3);
+}
+
+.backlog-divider-dot {
+  background-color: rgba(200, 200, 200, 0.7);
+}
+
+/* バックログのメッセージスタイル */
+.backlog-message {
+  background-color: rgba(40, 40, 40, 0.7);
+  border-color: rgba(200, 200, 200, 0.2);
+}
+
+.backlog-character-name {
+  color: rgba(230, 230, 230, 1);
+}
+
+.backlog-narration {
+  color: rgba(220, 220, 220, 0.8);
+}
+
+.backlog-character-icon {
+  border-color: rgba(200, 200, 200, 0.3);
+}
+
+/* フッター */
+.backlog-footer {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-color: rgba(200, 200, 200, 0.1);
+}
