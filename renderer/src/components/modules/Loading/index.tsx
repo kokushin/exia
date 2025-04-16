@@ -11,7 +11,7 @@ export const Loading: React.FC = () => {
   const [screen, setScreen] = useAtom(screenState);
   const [loadedAssets, setLoadedAssets] = useState(0);
   const loadedAssetsRef = useRef(new Set<string>()); // 既にロードされたアセットを追跡
-  
+
   const scenario = useAtomValue(scenarioState);
 
   // アセットリストの生成をメモ化
@@ -54,7 +54,7 @@ export const Loading: React.FC = () => {
   const cacheAsset = useRef(async (src: string) => {
     // 既にロード済みのアセットは処理しない
     if (loadedAssetsRef.current.has(src)) return;
-    
+
     try {
       if (src.endsWith(".wav")) {
         const audio = new Audio();
@@ -62,7 +62,7 @@ export const Loading: React.FC = () => {
           audio.onloadeddata = () => {
             if (!loadedAssetsRef.current.has(src)) {
               loadedAssetsRef.current.add(src);
-              setLoadedAssets(prev => prev + 1);
+              setLoadedAssets((prev) => prev + 1);
             }
             resolve();
           };
@@ -70,7 +70,7 @@ export const Loading: React.FC = () => {
             console.warn(`File not found: ${src}`);
             if (!loadedAssetsRef.current.has(src)) {
               loadedAssetsRef.current.add(src);
-              setLoadedAssets(prev => prev + 1);
+              setLoadedAssets((prev) => prev + 1);
             }
             resolve();
           };
@@ -82,7 +82,7 @@ export const Loading: React.FC = () => {
           img.onload = () => {
             if (!loadedAssetsRef.current.has(src)) {
               loadedAssetsRef.current.add(src);
-              setLoadedAssets(prev => prev + 1);
+              setLoadedAssets((prev) => prev + 1);
             }
             resolve();
           };
@@ -90,7 +90,7 @@ export const Loading: React.FC = () => {
             console.warn(`Failed to load image: ${src}`);
             if (!loadedAssetsRef.current.has(src)) {
               loadedAssetsRef.current.add(src);
-              setLoadedAssets(prev => prev + 1);
+              setLoadedAssets((prev) => prev + 1);
             }
             resolve();
           };
@@ -102,7 +102,7 @@ export const Loading: React.FC = () => {
       // エラーが発生しても、ロード完了としてカウント
       if (!loadedAssetsRef.current.has(src)) {
         loadedAssetsRef.current.add(src);
-        setLoadedAssets(prev => prev + 1);
+        setLoadedAssets((prev) => prev + 1);
       }
     }
   }).current;
@@ -113,7 +113,7 @@ export const Loading: React.FC = () => {
     // 初期化
     setLoadedAssets(0);
     loadedAssetsRef.current = new Set();
-    
+
     let mounted = true;
     let loadingTimer: NodeJS.Timeout | undefined;
 
