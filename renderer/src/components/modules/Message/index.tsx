@@ -141,15 +141,15 @@ export const Message: FC = () => {
     // 現在のラインをログに追加してから次のラインに進む
     const nextLine = scenario.lines[nextLineIndex];
     const updatedCharacters = updateCharacterInfo(nextLine, [...scenario.characters]);
-    
+
     // 現在表示中のメッセージをログに追加
     const updatedLogs = [...scenario.logs];
     const currentLine = scenario.currentLine;
-    
+
     if (currentLine) {
       // 重複チェック
-      const isAlreadyLogged = updatedLogs.some(log => log.text === currentLine.text);
-      
+      const isAlreadyLogged = updatedLogs.some((log) => log.text === currentLine.text);
+
       if (!isAlreadyLogged) {
         // 現在の行に関連するキャラクター情報を取得
         let characterInfo = undefined;
@@ -173,7 +173,7 @@ export const Message: FC = () => {
     }
 
     // シナリオの状態を更新（ログの更新と次の行への進行を同時に行う）
-    setScenario(prevState => ({
+    setScenario((prevState) => ({
       ...prevState,
       currentLineIndex: nextLineIndex,
       currentLine: nextLine,
@@ -189,20 +189,23 @@ export const Message: FC = () => {
   useEffect(() => {
     if (scenario.currentLine && scenario.logs.length === 0 && isLoaded) {
       // 最初のメッセージを表示したときにログに追加
-      const characterInfo = scenario.currentLine.character && scenario.currentLine.character.index !== undefined 
-        ? {
-            index: scenario.currentLine.character.index,
-            name: scenario.characters[scenario.currentLine.character.index].name,
-            imageFile: scenario.characters[scenario.currentLine.character.index].imageFile,
-          } 
-        : undefined;
+      const characterInfo =
+        scenario.currentLine.character && scenario.currentLine.character.index !== undefined
+          ? {
+              index: scenario.currentLine.character.index,
+              name: scenario.characters[scenario.currentLine.character.index].name,
+              imageFile: scenario.characters[scenario.currentLine.character.index].imageFile,
+            }
+          : undefined;
 
-      setScenario(prevState => ({
+      setScenario((prevState) => ({
         ...prevState,
-        logs: [{
-          ...scenario.currentLine,
-          character: characterInfo,
-        }]
+        logs: [
+          {
+            ...scenario.currentLine,
+            character: characterInfo,
+          },
+        ],
       }));
     }
   }, [scenario.currentLine, scenario.logs.length, isLoaded, setScenario, scenario.characters]);

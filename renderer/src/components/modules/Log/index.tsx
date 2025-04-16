@@ -25,12 +25,12 @@ export const Log: React.FC = () => {
   // 表示するログ一覧を作成（保存されたログ＋現在表示中のセリフ）
   const allLogs = useMemo(() => {
     const logs = [...scenario.logs]; // 保存されたログ
-    
+
     // 現在表示中のセリフが既にログに含まれていないか確認
     const currentLine = scenario.currentLine;
     if (currentLine) {
-      const isAlreadyLogged = logs.some(log => log.text === currentLine.text);
-      
+      const isAlreadyLogged = logs.some((log) => log.text === currentLine.text);
+
       if (!isAlreadyLogged) {
         // 現在の行に関連するキャラクター情報を取得
         let characterInfo = undefined;
@@ -44,7 +44,7 @@ export const Log: React.FC = () => {
             };
           }
         }
-        
+
         // 現在表示中のセリフをログに追加
         logs.push({
           ...currentLine,
@@ -52,7 +52,7 @@ export const Log: React.FC = () => {
         });
       }
     }
-    
+
     return logs;
   }, [scenario.logs, scenario.currentLine, scenario.characters]);
 
