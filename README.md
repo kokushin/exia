@@ -9,7 +9,7 @@ Inspired by the UX/UI of “勝利の女神:NIKKE”.</b>
 
 ## 🚧 重要事項
 
-Exia は現在開発中です。全体の進捗は 20% くらいです。<br>
+Exia は現在開発中です。全体の進捗は 25% くらいです。<br>
 [@kokushing](https://x.com/kokushing) をフォローして更新をお待ちください！
 
 ## 📝 概要
@@ -55,7 +55,7 @@ Google Chrome での閲覧を推奨します。
   - [ ] データロード
   - [x] オート再生
   - [ ] スキップ
-  - [ ] ログ
+  - [x] ログ
   - [ ] コンフィグ
 - その他
   - [x] Windows/MacOS 向けアプリケーションコンパイル
