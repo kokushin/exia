@@ -22,7 +22,7 @@ export const MainScreen: React.FC = () => {
         const mockScenarioData = await import("@/scenarios/S_000.json");
         const mockScenario = {
           ...mockScenarioData.default,
-          logs: [] // logsプロパティを追加
+          logs: [], // logsプロパティを追加
         } as Scenario;
         if (!scenario.isFetched) {
           setScenario({
