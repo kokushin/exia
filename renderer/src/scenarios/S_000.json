@@ -29,8 +29,7 @@
     },
     {
       "character": {
-        "index": 0,
-        "imageFile": "chara_01.webp"
+        "index": 0
       },
       "type": 1,
       "text": "こんにちは！私が渚です。Exiaの機能を順に説明していきましょう。"
@@ -48,8 +47,7 @@
     },
     {
       "character": {
-        "index": 1,
-        "imageFile": "chara_02.webp"
+        "index": 1
       },
       "type": 1,
       "text": "私は凛です！複数のキャラクターが会話することもできますね。"
