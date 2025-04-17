@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { navigationState } from "@/states/navigationState";
 import { scenarioState } from "@/states/scenarioState";
 import { ScenarioLine } from "@/types";
@@ -9,6 +9,7 @@ import { MESSAGE_TYPE } from "@/constants";
 export const Log: React.FC = () => {
   const [navigation, setNavigation] = useAtom(navigationState);
   const [scenario] = useAtom(scenarioState);
+  const logContainerRef = useRef<HTMLDivElement>(null);
 
   const handleClose = useCallback(() => {
     setNavigation({
@@ -16,6 +17,18 @@ export const Log: React.FC = () => {
       isLogOpen: false,
     });
   }, [navigation, setNavigation]);
+
+  // バックログが開かれたときに自動的に一番下にスクロールする
+  useEffect(() => {
+    if (navigation.isLogOpen && logContainerRef.current) {
+      // 少し遅延を入れることでDOMの更新後に確実にスクロールされるようにする
+      setTimeout(() => {
+        if (logContainerRef.current) {
+          logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
+        }
+      }, 100);
+    }
+  }, [navigation.isLogOpen]);
 
   // 表示するログ一覧を作成（保存されたログ＋現在表示中のセリフ）
   const allLogs = useMemo(() => {
@@ -134,6 +147,7 @@ export const Log: React.FC = () => {
 
           {/* スクロール可能なログ本文 */}
           <div
+            ref={logContainerRef}
             className="flex-1 overflow-y-auto px-4 py-6 text-white [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300/30 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-gray-300/50"
             style={{
               backgroundImage: "linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3))",
