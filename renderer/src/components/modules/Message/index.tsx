@@ -1,4 +1,4 @@
-import { useMemo, useState, FC } from "react";
+import { useMemo, useState, FC, useEffect } from "react";
 import { useAtomValue } from "jotai";
 import { screenState } from "@/states/screenState";
 import { MESSAGE_TYPE } from "@/constants";
@@ -30,6 +30,25 @@ export const Message: FC = () => {
 
   // オートプレイ管理フックを使用
   useAutoPlay(navigation.isAutoPlay, isReading, handleNextLine, goToNextLine);
+
+  // スペースキーでのメッセージ送り機能
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // スペースキーが押された場合で、かつAutoPlayでなく、選択肢表示中でもない場合にメッセージを進める
+      if (e.code === 'Space' && !navigation.isAutoPlay && !isShowingChoices && isLoaded) {
+        e.preventDefault(); // デフォルトのスクロール動作を防止
+        handleNextLine(goToNextLine);
+      }
+    };
+
+    // キーボードイベントのリスナーを追加
+    window.addEventListener('keydown', handleKeyDown);
+
+    // コンポーネントのアンマウント時にリスナーを削除
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [navigation.isAutoPlay, isShowingChoices, isLoaded, handleNextLine, goToNextLine]);
 
   // 現在のキャラクター名を更新
   useMemo(() => {
