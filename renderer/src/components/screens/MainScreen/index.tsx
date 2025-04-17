@@ -19,7 +19,11 @@ export const MainScreen: React.FC = () => {
   useEffect(() => {
     const loadScenario = async () => {
       try {
-        const mockScenario = (await import("@/scenarios/S_000.json")).default as Scenario;
+        const mockScenarioData = await import("@/scenarios/S_000.json");
+        const mockScenario = {
+          ...mockScenarioData.default,
+          logs: [], // logsプロパティを追加
+        } as Scenario;
         if (!scenario.isFetched) {
           setScenario({
             ...scenario,

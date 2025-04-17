@@ -3,7 +3,9 @@ module.exports = {
   content: ["./renderer/src/pages/**/*.{js,ts,jsx,tsx}", "./renderer/src/components/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      // アニメーションのキーフレーム定義
       keyframes: {
+        // ローディングスピンアニメーション
         loadingSpin: {
           "0%, 2%": { transform: "rotate(0deg)" },
           "12.5%, 14.5%": { transform: "rotate(90deg)" },
@@ -15,6 +17,7 @@ module.exports = {
           "87.5%, 89.5%": { transform: "rotate(630deg)" },
           "100%": { transform: "rotate(720deg)" },
         },
+        // 奇数要素の点滅効果
         loadingEffectOdd: {
           "0%, 2%": { opacity: 0.3 },
           "12.5%, 14.5%": { opacity: 1 },
@@ -26,6 +29,7 @@ module.exports = {
           "87.5%, 89.5%": { opacity: 1 },
           "100%": { opacity: 0.3 },
         },
+        // 偶数要素の点滅効果
         loadingEffectEven: {
           "0%, 2%": { opacity: 1 },
           "12.5%, 14.5%": { opacity: 0.3 },
@@ -38,6 +42,7 @@ module.exports = {
           "100%": { opacity: 1 },
         },
       },
+      // アニメーションの適用設定
       animation: {
         "loading-spin": "loadingSpin 9s cubic-bezier(0.65, 0, 0.35, 1) infinite",
         "loading-effect-odd": "loadingEffectOdd 9s cubic-bezier(0.65, 0, 0.35, 1) infinite",
