@@ -79,7 +79,7 @@ export const Log: React.FC = () => {
           {characterInfo.imageFile && (
             <div className="w-12 h-12 overflow-hidden rounded-full bg-gray-800 border-2 border-gray-300/30">
               <img
-                src={`/images/characters/${characterInfo.imageFile}`}
+                src={`./images/characters/${characterInfo.imageFile}`}
                 alt={characterInfo.name || "キャラクター"}
                 className="w-full h-full object-cover object-top"
               />
