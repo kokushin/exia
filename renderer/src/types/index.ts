@@ -8,6 +8,9 @@ export type Scenario = {
   currentLineIndex: number;
   characters?: ScenarioCharacter[];
   lines: ScenarioLine[];
+  currentLine?: ScenarioLine;
+  currentCharacterIndex?: number;
+  logs: ScenarioLogEntry[];
 };
 
 export type ScenarioCharacter = {
@@ -24,7 +27,13 @@ export type ScenarioCutIn = {
   isFullScreen?: boolean;
 };
 
+export type ScenarioChoice = {
+  text: string;
+  jumpTo: string; // ジャンプ先のID
+};
+
 export type ScenarioLine = {
+  id?: string; // 特定の行にジャンプするためのID
   character?: {
     index: number;
     name?: string;
@@ -35,8 +44,10 @@ export type ScenarioLine = {
   cutIn?: ScenarioCutIn;
   imageFile?: string;
   backgroundFile?: string;
-  type: number; // MESSAGE_TYPE定数を使用する予定: 0=ナレーション, 1=セリフ
+  type: number; // 0=ナレーション, 1=セリフ, 2=選択肢
   text: string;
+  choices?: ScenarioChoice[]; // 選択肢の配列
+  jumpTo?: string; // ジャンプ先の行ID
 };
 
 export type Navigation = {
