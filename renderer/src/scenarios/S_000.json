@@ -5,14 +5,14 @@
   "characters": [
     {
       "index": 0,
-      "name": "キャラA",
+      "name": "渚",
       "imageFile": "chara_01.webp",
       "isShow": true,
       "speakerId": 3
     },
     {
       "index": 1,
-      "name": "キャラB",
+      "name": "凛",
       "imageFile": "chara_02.webp",
       "isShow": true,
       "speakerId": 2
@@ -21,14 +21,11 @@
   "lines": [
     {
       "type": 0,
-      "text": "説明テキスト"
+      "text": "ようこそ、Exiaノベルゲームエンジンへ！<br>このチュートリアルでは、基本機能を紹介します。"
     },
     {
-      "character": {
-        "index": 0
-      },
       "type": 0,
-      "text": "キャラクター移動"
+      "text": "画面をクリックするか、スペースキーを押して、ストーリーを進めることができます。"
     },
     {
       "character": {
@@ -36,18 +33,58 @@
         "imageFile": "chara_01.webp"
       },
       "type": 1,
-      "text": "キャラクターのセリフ1"
+      "text": "こんにちは！私が渚です。Exiaの機能を順に説明していきましょう。"
+    },
+    {
+      "character": {
+        "index": 0
+      },
+      "type": 1,
+      "text": "まず、この画面のようにキャラクターがセリフを話すことができます。<br>これは「ダイアログ」モードと呼ばれています。"
+    },
+    {
+      "type": 0,
+      "text": "これは「ナレーション」モードです。ストーリーの背景説明などに使用されます。"
+    },
+    {
+      "character": {
+        "index": 1,
+        "imageFile": "chara_02.webp"
+      },
+      "type": 1,
+      "text": "私は凛です！複数のキャラクターが会話することもできますね。"
+    },
+    {
+      "character": {
+        "index": 0
+      },
+      "type": 1,
+      "text": "その通りです。次に特殊な表現方法を紹介します。"
+    },
+    {
+      "character": {
+        "index": 1
+      },
+      "type": 1,
+      "text": "テキストは<br>このように改行したり、<br><span style=\"font-size:24px\">サイズを変えたり</span>することもできます。"
     },
     {
       "cutIn": {
         "imageFile": "cut_01.webp"
       },
       "type": 0,
-      "text": "カットイン表示"
+      "text": "これはカットインです。特定のシーンを強調するために使用できます。"
+    },
+    {
+      "character": {
+        "index": 0
+      },
+      "type": 1,
+      "text": "カットインが表示されている状態でもキャラクターが会話できますね。"
     },
     {
       "type": 0,
-      "text": "カットイン非表示"
+      "text": "カットインを非表示にすることもできます。"
     },
     {
       "cutIn": {
@@ -55,7 +92,7 @@
         "isFullScreen": true
       },
       "type": 0,
-      "text": "CG表示"
+      "text": "これはフルスクリーンCGです。重要なシーンや背景の変更に使用できます。"
     },
     {
       "cutIn": {
@@ -66,77 +103,132 @@
         "index": 1
       },
       "type": 1,
-      "text": "CG中のキャラクターのセリフ"
+      "text": "CGの上にキャラクターのセリフを表示することもできます。物語の臨場感が増しますね！"
     },
     {
       "character": {
         "index": 1
       },
       "type": 0,
-      "text": "CG非表示"
+      "text": "CGを終了して、通常のシーンに戻ります。"
     },
     {
       "character": {
-        "index": 1,
-        "imageFile": "chara_02.webp"
+        "index": 0,
+        "name": "渚",
+        "imageFile": "chara_01.webp"
       },
       "type": 1,
-      "text": "キャラクターのセリフ2<br>改行<br><span style=\"font-size:24px\">テキストの大きさ変更</span>"
+      "text": "そして最後に、Exiaの重要な機能である「選択肢」を紹介します。<br>ユーザーは物語の進行を選ぶことができます。"
     },
     {
       "type": 2,
-      "text": "どうしますか？",
+      "text": "どのような機能についてもっと知りたいですか？",
       "choices": [
         {
-          "text": "特に考えたことはない",
-          "jumpTo": "choice1_response"
+          "text": "テキストスタイルについて",
+          "jumpTo": "text_style_choice"
         },
         {
-          "text": "ディーゼルと話すこと",
-          "jumpTo": "choice2_response"
+          "text": "キャラクター表示について",
+          "jumpTo": "character_choice"
         }
       ]
     },
     {
-      "id": "choice1_response",
+      "id": "text_style_choice",
       "character": {
-        "index": 0,
-        "imageFile": "chara_01.webp"
+        "index": 0
       },
       "type": 1,
-      "text": "そうですか。特に考えることがないのも悪くないですね。"
+      "text": "テキストスタイルについて説明します。Exiaでは、HTMLタグを使って<span style=\"color:red\">色</span>や<span style=\"font-weight:bold\">太字</span>などのスタイルを適用できます。"
     },
     {
-      "type": 0,
-      "text": "選択肢1の続き",
-      "jumpTo": "after_choice"
+      "character": {
+        "index": 0
+      },
+      "type": 1,
+      "text": "また、テキストの表示速度も調整できます。これはゲームの雰囲気作りに重要な要素です。",
+      "jumpTo": "choice_end"
     },
     {
-      "id": "choice2_response",
+      "id": "character_choice",
+      "character": {
+        "index": 1
+      },
+      "type": 1,
+      "text": "キャラクター表示について説明します。キャラクターの立ち絵は自由に切り替えることができます。"
+    },
+    {
       "character": {
         "index": 1,
         "imageFile": "chara_02.webp"
       },
       "type": 1,
-      "text": "ディーゼルと話したいんですか？良いですね。"
+      "text": "また、キャラクターの名前を途中で変更したり、表情を変えたりすることも可能です。ストーリーの展開に合わせて使い分けましょう。"
+    },
+    {
+      "id": "choice_end",
+      "type": 2,
+      "text": "もう一つ説明して欲しい機能はありますか？",
+      "choices": [
+        {
+          "text": "選択肢の仕組みについて",
+          "jumpTo": "choice_mechanism"
+        },
+        {
+          "text": "チュートリアルを終了する",
+          "jumpTo": "tutorial_end"
+        }
+      ]
+    },
+    {
+      "id": "choice_mechanism",
+      "character": {
+        "index": 0
+      },
+      "type": 1,
+      "text": "選択肢の仕組みについて説明します。各選択肢には「jumpTo」というプロパティがあり、選択後にジャンプする先のIDを指定します。"
+    },
+    {
+      "character": {
+        "index": 0
+      },
+      "type": 1,
+      "text": "また、セリフ自体にも「jumpTo」を設定できるので、条件分岐やループなど複雑なストーリー展開が可能です。"
+    },
+    {
+      "character": {
+        "index": 0
+      },
+      "type": 1,
+      "text": "選択肢の結果はログに記録され、プレイヤーが選んだ選択肢も確認できます。"
     },
     {
       "type": 0,
-      "text": "選択肢2の続き"
+      "text": "このようにして、インタラクティブなノベルゲームを作成できます。",
+      "jumpTo": "tutorial_end"
     },
     {
-      "id": "after_choice",
+      "id": "tutorial_end",
       "character": {
         "index": 0,
-        "name": "キャラA(真の姿)",
+        "name": "渚",
         "imageFile": "chara_01.webp"
       },
       "type": 1,
-      "text": "選択後の共通パート"
+      "text": "以上でExiaの基本機能紹介を終わります。実際にゲームを作る際は、これらの機能を組み合わせて豊かなストーリーテリングを実現してください。"
+    },
+    {
+      "character": {
+        "index": 1
+      },
+      "type": 1,
+      "text": "お疲れ様でした！それでは素敵なノベルゲーム作りをお楽しみください！"
     },
     {
       "type": 0,
-      "text": "デバッグ終了"
+      "text": "チュートリアル終了"
     }
   ]
 }

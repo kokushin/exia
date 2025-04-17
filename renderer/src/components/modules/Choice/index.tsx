@@ -20,7 +20,7 @@ export const Choice: React.FC<ChoiceProps> = ({ choices, onSelect }) => {
             className="w-full max-w-xl bg-black bg-opacity-80 text-white py-4 px-6 border border-gray-700 hover:bg-opacity-100 hover:bg-gray-800 transition-all duration-300 flex items-center justify-center"
             onClick={() => onSelect(choice)}
           >
-            <span className="text-white text-lg font-bold text-center">{choice.text}</span>
+            <span className="text-white md:text-lg font-bold text-center">{choice.text}</span>
           </button>
         ))}
       </div>
