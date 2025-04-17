@@ -1,12 +1,13 @@
 import { useAtom } from "jotai";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { scenarioState } from "@/states/scenarioState";
 import { navigationState } from "@/states/navigationState";
-import { CharacterInfo, ScenarioLogEntry } from "@/types";
+import { CharacterInfo, ScenarioChoice, ScenarioLogEntry } from "@/types";
 
 export const useScenarioManager = (isLoaded: boolean) => {
   const [scenario, setScenario] = useAtom(scenarioState);
   const [navigation, setNavigation] = useAtom(navigationState);
+  const [isShowingChoices, setIsShowingChoices] = useState(false);
 
   // キャラクター情報を更新する関数
   const updateCharacterInfo = useCallback((nextLine: any, characters: any[]) => {
@@ -69,8 +70,74 @@ export const useScenarioManager = (isLoaded: boolean) => {
     return updatedLogs;
   }, [scenario.logs, scenario.currentLine, getCharacterInfoForLog]);
 
+  // 特定のIDを持つ行のインデックスを見つける
+  const findLineIndexById = useCallback(
+    (id: string): number => {
+      const index = scenario.lines.findIndex((line) => line.id === id);
+      return index !== -1 ? index : scenario.currentLineIndex + 1;
+    },
+    [scenario.lines, scenario.currentLineIndex]
+  );
+
+  // 選択肢が選ばれたときの処理
+  const handleChoiceSelect = useCallback(
+    (choice: ScenarioChoice) => {
+      const targetIndex = findLineIndexById(choice.jumpTo);
+
+      // 選択肢を非表示にする
+      setIsShowingChoices(false);
+
+      // 現在の行をログに追加
+      const updatedLogs = addCurrentLineToLogs();
+
+      // 選択結果をログに追加
+      updatedLogs.push({
+        type: 0,
+        text: `選択: ${choice.text}`,
+      } as ScenarioLogEntry);
+
+      // シナリオの状態を更新してジャンプさせる
+      const nextLine = scenario.lines[targetIndex];
+      const updatedCharacters = updateCharacterInfo(nextLine, [...scenario.characters]);
+
+      setScenario((prevState) => ({
+        ...prevState,
+        currentLineIndex: targetIndex,
+        currentLine: nextLine,
+        currentCharacterIndex: nextLine.character !== undefined ? nextLine.character.index : -1,
+        characters: updatedCharacters,
+        logs: updatedLogs,
+      }));
+    },
+    [scenario.lines, scenario.characters, findLineIndexById, updateCharacterInfo, addCurrentLineToLogs, setScenario]
+  );
+
   // 次のセリフに進む
   const goToNextLine = useCallback(() => {
+    // 選択肢表示中は、選択されるまで次には進まない
+    if (isShowingChoices) {
+      return false;
+    }
+
+    // 現在の行がジャンプ命令を持っている場合
+    if (scenario.currentLine?.jumpTo) {
+      const targetIndex = findLineIndexById(scenario.currentLine.jumpTo);
+      const nextLine = scenario.lines[targetIndex];
+      const updatedCharacters = updateCharacterInfo(nextLine, [...scenario.characters]);
+      const updatedLogs = addCurrentLineToLogs();
+
+      setScenario((prevState) => ({
+        ...prevState,
+        currentLineIndex: targetIndex,
+        currentLine: nextLine,
+        currentCharacterIndex: nextLine.character !== undefined ? nextLine.character.index : -1,
+        characters: updatedCharacters,
+        logs: updatedLogs,
+      }));
+
+      return true;
+    }
+
     const nextLineIndex = scenario.currentLineIndex + 1;
 
     // シナリオの末尾に到達したら処理をスキップ
@@ -86,6 +153,13 @@ export const useScenarioManager = (isLoaded: boolean) => {
     const updatedCharacters = updateCharacterInfo(nextLine, [...scenario.characters]);
     const updatedLogs = addCurrentLineToLogs();
 
+    // 次が選択肢の場合
+    if (nextLine.type === 2) {
+      setIsShowingChoices(true);
+    } else {
+      setIsShowingChoices(false);
+    }
+
     // シナリオの状態を更新
     setScenario((prevState) => ({
       ...prevState,
@@ -97,7 +171,15 @@ export const useScenarioManager = (isLoaded: boolean) => {
     }));
 
     return true;
-  }, [scenario, setNavigation, setScenario, updateCharacterInfo, addCurrentLineToLogs]);
+  }, [
+    scenario,
+    setNavigation,
+    setScenario,
+    updateCharacterInfo,
+    addCurrentLineToLogs,
+    isShowingChoices,
+    findLineIndexById,
+  ]);
 
   // 現在のキャラクターの名前を取得
   const getCurrentCharacterName = useCallback(() => {
@@ -138,5 +220,7 @@ export const useScenarioManager = (isLoaded: boolean) => {
     getCurrentCharacterName,
     isScenarioEnd,
     addCurrentLineToLogs,
+    isShowingChoices,
+    handleChoiceSelect,
   };
 };

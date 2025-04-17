@@ -22,4 +22,5 @@ export const MESSAGE_CONFIG = {
 export const MESSAGE_TYPE = {
   NARRATION: 0,
   DIALOGUE: 1,
+  CHOICE: 2,
 } as const;

@@ -84,13 +84,55 @@
       "text": "キャラクターのセリフ2<br>改行<br><span style=\"font-size:24px\">テキストの大きさ変更</span>"
     },
     {
+      "type": 2,
+      "text": "どうしますか？",
+      "choices": [
+        {
+          "text": "特に考えたことはない",
+          "jumpTo": "choice1_response"
+        },
+        {
+          "text": "ディーゼルと話すこと",
+          "jumpTo": "choice2_response"
+        }
+      ]
+    },
+    {
+      "id": "choice1_response",
+      "character": {
+        "index": 0,
+        "imageFile": "chara_01.webp"
+      },
+      "type": 1,
+      "text": "そうですか。特に考えることがないのも悪くないですね。"
+    },
+    {
+      "type": 0,
+      "text": "選択肢1の続き",
+      "jumpTo": "after_choice"
+    },
+    {
+      "id": "choice2_response",
+      "character": {
+        "index": 1,
+        "imageFile": "chara_02.webp"
+      },
+      "type": 1,
+      "text": "ディーゼルと話したいんですか？良いですね。"
+    },
+    {
+      "type": 0,
+      "text": "選択肢2の続き"
+    },
+    {
+      "id": "after_choice",
       "character": {
         "index": 0,
         "name": "キャラA(真の姿)",
         "imageFile": "chara_01.webp"
       },
       "type": 1,
-      "text": "キャラクターのセリフ3"
+      "text": "選択後の共通パート"
     },
     {
       "type": 0,
