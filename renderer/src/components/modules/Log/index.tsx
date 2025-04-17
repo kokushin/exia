@@ -125,7 +125,7 @@ export const Log: React.FC = () => {
             {/* 閉じるボタン */}
             <button
               onClick={handleClose}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors w-10 h-10 rounded-lg border border-gray-700/50 flex items-center justify-center hover:bg-gray-800/50"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors w-10 h-10 rounded-full border border-gray-700/50 flex items-center justify-center hover:bg-gray-800/50"
               aria-label="閉じる"
             >
               <XMarkIcon className="size-6" />

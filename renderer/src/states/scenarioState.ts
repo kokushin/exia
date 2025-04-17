@@ -1,11 +1,11 @@
 import { atom } from "jotai";
-import { Scenario, ScenarioLine } from "@/types";
+import { Scenario, ScenarioLine, ScenarioLogEntry } from "@/types";
 
 export const scenarioState = atom<
   Scenario & {
     currentCharacterIndex: number;
     currentLine: ScenarioLine | undefined;
-    logs: ScenarioLine[];
+    logs: ScenarioLogEntry[];
     isFetched: boolean;
   }
 >({

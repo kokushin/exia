@@ -9,7 +9,7 @@ Inspired by the UX/UI of “勝利の女神:NIKKE”.</b>
 
 ## 🚧 重要事項
 
-Exia は現在開発中です。全体の進捗は 25% くらいです。<br>
+Exia は現在開発中です。全体の進捗は 30% くらいです。<br>
 [@kokushing](https://x.com/kokushing) をフォローして更新をお待ちください！
 
 ## 📝 概要
@@ -40,7 +40,7 @@ Google Chrome での閲覧を推奨します。
   - [x] キャラクター切り替え
   - [x] カットイン画像表示
   - [x] CG 表示
-  - [ ] 選択肢表示/条件分岐(セリフ間ジャンプ)
+  - [x] 選択肢表示/条件分岐(セリフ間ジャンプ)
   - [ ] シナリオ切り替え
   - [ ] スタート画面
   - [ ] エンディング画面
@@ -127,30 +127,32 @@ npm run dev
 // 構成と型の参考
 // renderer/src/scenarios.json
 export const mockScenario: Scenario = {
-  id: 1, // シナリオID. 現在機能しません
-  backgroundFile: "bg_01.png", // 背景画像のファイル名を指定
-  currentLineIndex: 0, // 現在のセリフ位置. 現在機能しません
+  id: "S_000", // シナリオID
+  backgroundFile: "bg_01.webp", // 背景画像のファイル名を指定
+  currentLineIndex: 0, // 現在のセリフ位置
   characters: [
     // キャラクター情報を配列で格納する
     // 増やした分だけキャラクターが表示される
     {
       index: 0, // キャラクターの番号. 0が一番左端です
-      name: "キャラA", // キャラクターの名前
-      imageFile: "chara_01.png", // キャラクター画像のファイル名を指定
-      isShow: true, // 初期表示フラグ. 現在機能しません
+      name: "ガイド", // キャラクターの名前
+      imageFile: "chara_01.webp", // キャラクター画像のファイル名を指定
+      isShow: true, // 初期表示フラグ
+      speakerId: 3, // VOICEVOXのspeakerId（使用する場合）
     },
     {
       index: 1,
-      name: "キャラB",
-      imageFile: "chara_02.png",
+      name: "アシスタント",
+      imageFile: "chara_02.webp",
       isShow: true,
+      speakerId: 2,
     },
   ],
   lines: [
     // セリフを配列で格納する
     // 増やした分だけセリフが表示される
     {
-      type: 0, // メッセージタイプ. 0=システム 1=キャラクター
+      type: 0, // メッセージタイプ. 0=ナレーション, 1=セリフ, 2=選択肢
       text: "説明テキスト", // セリフの内容. HTMLタグが使えます
     },
     {
@@ -163,25 +165,87 @@ export const mockScenario: Scenario = {
     {
       character: {
         index: 0,
-        imageFile: "chara_01.png", // キャラクターの画像を変更する場合、画像のファイル名を指定
+        imageFile: "chara_01.webp", // キャラクターの画像を変更する場合、画像のファイル名を指定
       },
       type: 1,
       text: "キャラクターのセリフ1",
     },
     {
-      cutInFile: "cut_01.png", // カットインを表示する場合、画像のファイル名を指定
+      cutIn: {
+        // カットインを表示する場合、imageFileプロパティを指定
+        imageFile: "cut_01.webp",
+      },
       type: 0,
       text: "カットイン表示",
     },
     {
+      type: 0,
+      text: "カットイン非表示",
+    },
+    {
+      cutIn: {
+        // フルスクリーンCGを表示する場合はisFullScreenをtrueにする
+        imageFile: "cg_01.webp",
+        isFullScreen: true,
+      },
+      type: 0,
+      text: "CG表示",
+    },
+    {
       character: {
         index: 1,
-        imageFile: "chara_02.png",
+        imageFile: "chara_02.webp",
       },
       type: 1,
       text: 'キャラクターのセリフ2<br>改行<br><span style="font-size:24px">テキストの大きさ変更</span>',
     },
-    ...
+    // 選択肢表示の例
+    {
+      id: "choice_point", // 行にIDを設定できます（ジャンプ先の指定用）
+      type: 2, // タイプ2は選択肢を表示
+      text: "どうしますか？", // 選択肢の前に表示するテキスト
+      choices: [
+        // 選択肢の配列
+        {
+          text: "選択肢1のテキスト", // 選択肢に表示するテキスト
+          jumpTo: "choice1_response", // 選択時にジャンプする行のID
+        },
+        {
+          text: "選択肢2のテキスト",
+          jumpTo: "choice2_response",
+        },
+      ],
+    },
+    // 選択肢1を選んだ場合のジャンプ先
+    {
+      id: "choice1_response", // jumpToで指定されたID
+      character: {
+        index: 0,
+      },
+      type: 1,
+      text: "選択肢1を選んだ場合の応答",
+      jumpTo: "after_choice", // 別の行へさらにジャンプすることも可能
+    },
+    // 選択肢2を選んだ場合のジャンプ先
+    {
+      id: "choice2_response",
+      character: {
+        index: 1,
+      },
+      type: 1,
+      text: "選択肢2を選んだ場合の応答",
+    },
+    // 選択後の共通パート
+    {
+      id: "after_choice",
+      character: {
+        index: 0,
+        name: "ガイド（名前変更例）", // 名前を途中で変更することも可能
+        imageFile: "chara_01.webp",
+      },
+      type: 1,
+      text: "選択後の共通パート",
+    },
   ],
 };
 ```
