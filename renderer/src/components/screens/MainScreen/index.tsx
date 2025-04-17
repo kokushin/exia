@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useAtom } from "jotai";
 import { scenarioState } from "@/states/scenarioState";
 import { getCurrentCharacterIndex } from "@/utils";
-// シナリオデータを動的にインポート
 import type { Scenario } from "@/types";
 import { Message } from "@/components/modules/Message";
 import { Background } from "@/components/modules/Background";

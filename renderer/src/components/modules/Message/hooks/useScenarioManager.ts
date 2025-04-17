@@ -3,7 +3,6 @@ import { useCallback, useEffect } from "react";
 import { scenarioState } from "@/states/scenarioState";
 import { navigationState } from "@/states/navigationState";
 import { CharacterInfo, ScenarioLogEntry } from "@/types";
-import { ScenarioLine } from "@/types";
 
 export const useScenarioManager = (isLoaded: boolean) => {
   const [scenario, setScenario] = useAtom(scenarioState);
