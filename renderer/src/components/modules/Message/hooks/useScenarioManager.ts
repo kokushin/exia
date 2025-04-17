@@ -11,20 +11,32 @@ export const useScenarioManager = (isLoaded: boolean) => {
 
   // キャラクター情報を更新する関数
   const updateCharacterInfo = useCallback((nextLine: any, characters: any[]) => {
-    if (nextLine.character?.imageFile) {
-      characters[nextLine.character.index] = {
-        ...characters[nextLine.character.index],
-        imageFile: nextLine.character.imageFile,
-      };
+    if (!nextLine.character || nextLine.character.index === undefined) {
+      return characters;
     }
 
-    if (nextLine.character?.animation) {
-      characters[nextLine.character.index] = {
-        ...characters[nextLine.character.index],
-        animation: nextLine.character.animation,
-      };
+    // 新しいキャラクターオブジェクトを作成
+    const updatedCharacter = { ...characters[nextLine.character.index] };
+
+    // 名前が指定されている場合は更新
+    if (nextLine.character?.name) {
+      updatedCharacter.name = nextLine.character.name;
     }
-    return characters;
+
+    // 画像ファイルが指定されている場合は更新
+    if (nextLine.character?.imageFile) {
+      updatedCharacter.imageFile = nextLine.character.imageFile;
+    }
+
+    // アニメーションが指定されている場合は更新
+    if (nextLine.character?.animation) {
+      updatedCharacter.animation = nextLine.character.animation;
+    }
+
+    // 更新されたキャラクター情報で配列を更新
+    const newCharacters = [...characters];
+    newCharacters[nextLine.character.index] = updatedCharacter;
+    return newCharacters;
   }, []);
 
   // キャラクター情報をログ用に取得
