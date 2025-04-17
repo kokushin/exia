@@ -74,6 +74,9 @@
       "text": "これはカットインです。特定のシーンを強調するために使用できます。"
     },
     {
+      "cutIn": {
+        "imageFile": "cut_01.webp"
+      },
       "character": {
         "index": 0
       },
