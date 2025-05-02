@@ -105,10 +105,29 @@ export const useScenarioManager = (isLoaded: boolean) => {
 
   // シナリオをスキップする関数
   const skipToNextChoice = useCallback(() => {
+    // 現在の行をログに追加
+    let updatedLogs = addCurrentLineToLogs();
+
     // 次の選択肢、または最後の行のインデックスを取得
     const targetIndex = findNextChoiceIndex();
     const nextLine = scenario.lines[targetIndex];
     const updatedCharacters = updateCharacterInfo(nextLine, [...scenario.characters]);
+
+    // スキップされる範囲のセリフをすべてログに追加
+    for (let i = scenario.currentLineIndex + 1; i < targetIndex; i++) {
+      const skippedLine = scenario.lines[i];
+      // 重複チェック
+      const isAlreadyLogged = updatedLogs.some((log) => log.text === skippedLine.text);
+
+      if (!isAlreadyLogged) {
+        // キャラクター情報を取得してログに追加
+        const characterInfo = getCharacterInfoForLog(skippedLine);
+        updatedLogs.push({
+          ...skippedLine,
+          character: characterInfo,
+        } as ScenarioLogEntry);
+      }
+    }
 
     // 選択肢に到達したら表示する
     if (nextLine.type === 2) {
@@ -122,7 +141,7 @@ export const useScenarioManager = (isLoaded: boolean) => {
       currentLine: nextLine,
       currentCharacterIndex: nextLine.character !== undefined ? nextLine.character.index : -1,
       characters: updatedCharacters,
-      // 現在の行までの内容をすべてログに追加しない（スキップしているため）
+      logs: updatedLogs, // スキップしたセリフを含む更新されたログ
     }));
 
     // オート再生は停止
@@ -132,7 +151,17 @@ export const useScenarioManager = (isLoaded: boolean) => {
     }));
 
     return nextLine;
-  }, [findNextChoiceIndex, scenario.lines, scenario.characters, updateCharacterInfo, setScenario, setNavigation]);
+  }, [
+    findNextChoiceIndex,
+    scenario.lines,
+    scenario.characters,
+    scenario.currentLineIndex,
+    updateCharacterInfo,
+    setScenario,
+    setNavigation,
+    addCurrentLineToLogs,
+    getCharacterInfoForLog,
+  ]);
 
   // 選択肢が選ばれたときの処理
   const handleChoiceSelect = useCallback(
@@ -277,6 +306,6 @@ export const useScenarioManager = (isLoaded: boolean) => {
     addCurrentLineToLogs,
     isShowingChoices,
     handleChoiceSelect,
-    skipToNextChoice, // 新しく追加したスキップ機能
+    skipToNextChoice,
   };
 };
