@@ -91,6 +91,49 @@ export const useScenarioManager = (isLoaded: boolean) => {
     [scenario.lines, scenario.currentLineIndex]
   );
 
+  // 次の選択肢のインデックスを見つける
+  const findNextChoiceIndex = useCallback((): number => {
+    let index = scenario.currentLineIndex + 1;
+    while (index < scenario.lines.length) {
+      if (scenario.lines[index].type === 2) {
+        return index;
+      }
+      index++;
+    }
+    return scenario.lines.length - 1; // 選択肢が見つからない場合は最後の行を返す
+  }, [scenario.lines, scenario.currentLineIndex]);
+
+  // シナリオをスキップする関数
+  const skipToNextChoice = useCallback(() => {
+    // 次の選択肢、または最後の行のインデックスを取得
+    const targetIndex = findNextChoiceIndex();
+    const nextLine = scenario.lines[targetIndex];
+    const updatedCharacters = updateCharacterInfo(nextLine, [...scenario.characters]);
+
+    // 選択肢に到達したら表示する
+    if (nextLine.type === 2) {
+      setIsShowingChoices(true);
+    }
+
+    // シナリオの状態を更新
+    setScenario((prevState) => ({
+      ...prevState,
+      currentLineIndex: targetIndex,
+      currentLine: nextLine,
+      currentCharacterIndex: nextLine.character !== undefined ? nextLine.character.index : -1,
+      characters: updatedCharacters,
+      // 現在の行までの内容をすべてログに追加しない（スキップしているため）
+    }));
+
+    // オート再生は停止
+    setNavigation((prev) => ({
+      ...prev,
+      isAutoPlay: false,
+    }));
+
+    return nextLine;
+  }, [findNextChoiceIndex, scenario.lines, scenario.characters, updateCharacterInfo, setScenario, setNavigation]);
+
   // 選択肢が選ばれたときの処理
   const handleChoiceSelect = useCallback(
     (choice: ScenarioChoice) => {
@@ -234,5 +277,6 @@ export const useScenarioManager = (isLoaded: boolean) => {
     addCurrentLineToLogs,
     isShowingChoices,
     handleChoiceSelect,
+    skipToNextChoice, // 新しく追加したスキップ機能
   };
 };

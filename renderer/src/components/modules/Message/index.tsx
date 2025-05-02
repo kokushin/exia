@@ -1,6 +1,7 @@
 import { useMemo, useState, FC, useEffect } from "react";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { screenState } from "@/states/screenState";
+import { skipActionState } from "@/states/skipActionState";
 import { MESSAGE_TYPE } from "@/constants";
 import { DialogueLayout, NarrationLayout } from "./layouts";
 import { MessageTypewriter } from "./MessageTypewriter";
@@ -12,10 +13,25 @@ import { Choice } from "../Choice";
 export const Message: FC = () => {
   const { isLoaded } = useAtomValue(screenState);
   const [characterName, setCharacterName] = useState<string | undefined>(undefined);
+  const setSkipAction = useSetAtom(skipActionState);
 
   // シナリオ管理フックを使用
-  const { scenario, navigation, goToNextLine, getCurrentCharacterName, isShowingChoices, handleChoiceSelect } =
-    useScenarioManager(isLoaded);
+  const {
+    scenario,
+    navigation,
+    goToNextLine,
+    getCurrentCharacterName,
+    isShowingChoices,
+    handleChoiceSelect,
+    skipToNextChoice,
+  } = useScenarioManager(isLoaded);
+
+  // スキップアクションのatomを更新
+  useEffect(() => {
+    setSkipAction({
+      skipToNextChoice,
+    });
+  }, [setSkipAction, skipToNextChoice]);
 
   // メッセージ表示管理フックを使用
   const {
@@ -35,18 +51,18 @@ export const Message: FC = () => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // スペースキーが押された場合で、かつAutoPlayでなく、選択肢表示中でもない場合にメッセージを進める
-      if (e.code === 'Space' && !navigation.isAutoPlay && !isShowingChoices && isLoaded) {
+      if (e.code === "Space" && !navigation.isAutoPlay && !isShowingChoices && isLoaded) {
         e.preventDefault(); // デフォルトのスクロール動作を防止
         handleNextLine(goToNextLine);
       }
     };
 
     // キーボードイベントのリスナーを追加
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
     // コンポーネントのアンマウント時にリスナーを削除
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigation.isAutoPlay, isShowingChoices, isLoaded, handleNextLine, goToNextLine]);
 

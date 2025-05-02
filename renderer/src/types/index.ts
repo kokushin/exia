@@ -53,6 +53,7 @@ export type ScenarioLine = {
 export type Navigation = {
   isAutoPlay: boolean;
   isLogOpen: boolean;
+  isSkipModalOpen: boolean; // スキップモーダル表示状態を追加
 };
 
 export type Config = {};
