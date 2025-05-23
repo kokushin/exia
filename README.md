@@ -349,3 +349,5 @@ npm run build-voice
 
 Code and documentation copyright 2024 by @kokushing.<br>
 Code released under the MIT License.
+
+[![Star History Chart](https://api.star-history.com/svg?repos=kokushin/exia&type=Date)](https://star-history.com/#kokushin/exia&Date)
